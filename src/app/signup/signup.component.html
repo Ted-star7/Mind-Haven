@@ -1,0 +1,97 @@
+<div class="container">
+  <!-- Back Button -->
+  <button class="back-button" (click)="navigateBack()">Back to Home</button>
+
+  <!-- Left Section (Image and Welcome Message) -->
+  <div class="left-section">
+    <h1>Welcome to</h1>
+    <h2>MindHaven</h2>
+    <img
+      src="/assets/signup.jpg"
+      alt="Person meditating in a peaceful environment"
+    />
+    <button class="toggle-button" (click)="toggleForm()">
+      {{ isSignIn ? "Sign Up" : "Sign In" }}
+    </button>
+  </div>
+
+  <!-- Right Section (Forms) -->
+  <div class="right-section">
+    <div class="form-container" [class.sign-in-active]="isSignIn">
+      <!-- Sign Up Form -->
+      <form
+        *ngIf="!isSignIn"
+        (ngSubmit)="onSubmitSignUp(signUpForm)"
+        #signUpForm="ngForm"
+      >
+        <h2>Create an Account</h2>
+        <input
+          type="text"
+          placeholder="Full Name"
+          [(ngModel)]="signUpData.fullName"
+          name="fullName"
+          required
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          [(ngModel)]="signUpData.email"
+          name="email"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="signUpData.password"
+          name="password"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          [(ngModel)]="signUpData.rePassword"
+          name="rePassword"
+          required
+        />
+        <div class="checkbox-container">
+          <input
+            id="terms"
+            type="checkbox"
+            [(ngModel)]="signUpData.agreedToTerms"
+            name="agreedToTerms"
+            required
+          />
+          <label for="terms"
+            >I agree to the <a href="#">Terms of Service</a> and
+            <a href="#">Privacy Policy</a>.</label
+          >
+        </div>
+        <button type="submit" [disabled]="isLoading">Sign Up</button>
+      </form>
+
+      <!-- Sign In Form -->
+      <form
+        *ngIf="isSignIn"
+        (ngSubmit)="onSubmitSignIn(signInForm)"
+        #signInForm="ngForm"
+      >
+        <h2>Welcome Back</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          [(ngModel)]="signInData.email"
+          name="email"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="signInData.password"
+          name="password"
+          required
+        />
+        <button type="submit" [disabled]="isLoading">Sign In</button>
+      </form>
+    </div>
+  </div>
+</div>
