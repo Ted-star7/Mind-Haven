@@ -16,8 +16,9 @@ import { SessionService } from '../services/session.service';
   providers: [MatSnackBar],
 })
 export class SignupComponent {
-  isSignIn = false; // Toggle between Sign Up and Sign In forms
-  isLoading = false; // Loader status for API calls
+  isSignIn = false;
+  isLoading = false;
+  passwordVisible = false; // Toggle for password visibility
 
   constructor(
     private router: Router,
@@ -26,7 +27,7 @@ export class SignupComponent {
     private snackBar: MatSnackBar
   ) {}
 
-  // Sign Up Form Fields
+  // Sign Up and Sign In Form Data
   signUpData = {
     fullName: '',
     email: '',
@@ -34,30 +35,19 @@ export class SignupComponent {
     rePassword: '',
     agreedToTerms: false,
   };
-
-  // Sign In Form Fields
   signInData = {
     email: '',
     password: '',
   };
 
-  /**
-   * Toggle between Sign Up and Sign In forms
-   */
   toggleForm(): void {
     this.isSignIn = !this.isSignIn;
   }
 
-  /**
-   * Navigate back to the home page
-   */
   navigateBack(): void {
     this.router.navigate(['/']);
   }
 
-  /**
-   * Reset the Sign Up form to its initial state
-   */
   resetSignUpForm(): void {
     this.signUpData = {
       fullName: '',
@@ -68,9 +58,6 @@ export class SignupComponent {
     };
   }
 
-  /**
-   * Reset the Sign In form to its initial state
-   */
   resetSignInForm(): void {
     this.signInData = {
       email: '',
@@ -78,17 +65,10 @@ export class SignupComponent {
     };
   }
 
-  /**
-   * Reusable method to show Snackbar messages
-   */
   showSnackbar(message: string, duration: number = 3000): void {
     this.snackBar.open(message, 'Close', { duration });
   }
 
-  /**
-   * Handle Sign Up form submission
-   * @param form - Angular Form object
-   */
   onSubmitSignUp(form: NgForm): void {
     if (form.invalid) {
       this.showSnackbar('Please fill out all required fields correctly.');
@@ -99,13 +79,13 @@ export class SignupComponent {
     if (!passwordPattern.test(this.signUpData.password)) {
       this.showSnackbar(
         'Password must have at least 8 characters, including one uppercase letter and one number.',
-        5000
+        8000
       );
       return;
     }
 
     if (this.signUpData.password !== this.signUpData.rePassword) {
-      this.showSnackbar('Passwords do not match!', 3000);
+      this.showSnackbar('Passwords do not match!', 5000);
       return;
     }
 
@@ -132,44 +112,46 @@ export class SignupComponent {
     );
   }
 
-  /**
-   * Handle Sign In form submission
-   * @param form - Angular Form object
-   */
-  onSubmitSignIn(form: NgForm): void {
-    if (form.invalid) {
-      this.showSnackbar('Please enter valid credentials.');
-      return;
-    }
+onSubmitSignIn(form: NgForm): void {
+  if (form.invalid) {
+    this.showSnackbar('Please enter valid credentials.');
+    return;
+  }
 
-    this.isLoading = true;
+  this.isLoading = true;
 
-    const formData = {
-      email: this.signInData.email,
-      password: this.signInData.password,
-    };
+  const formData = {
+    email: this.signInData.email,
+    password: this.signInData.password,
+  };
 
-    this.serviceService.postRequest('/api/open/auth/login', formData, null).subscribe(
-      (response) => {
-        this.isLoading = false;
-        const { token, id, email } = response;
+  this.serviceService.postRequest('/api/open/auth/login', formData, null).subscribe(
+    (response) => {
+      this.isLoading = false;
+      const { token, "user id": id, "user email": email } = response;
 
-        if (token && id) {
-          this.sessionService.saveToken(token);
-          this.sessionService.saveEmail(email);
-          this.sessionService.saveId(id);
+      if (token && id) {
+        this.sessionService.saveToken(token);  
+        this.sessionService.saveEmail(email);  
+        this.sessionService.saveId(id);  
 
-          this.showSnackbar('Login successful!');
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.showSnackbar('Login failed: Invalid response from server.', 5000);
-        }
-      },
-      (error) => {
-        this.isLoading = false;
-        this.showSnackbar('Login failed. Please check your credentials.', 5000);
-        this.resetSignInForm();
+        this.showSnackbar('Login successful!');
+        this.router.navigate(['']);
+      } else {
+        this.showSnackbar('Login failed: Invalid response from server.', 5000);
       }
-    );
+    },
+    (error) => {
+      this.isLoading = false;
+      this.showSnackbar('Login failed. Please check your credentials.', 5000);
+      this.resetSignInForm();
+    }
+  );
+}
+
+
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
   }
 }
