@@ -1,0 +1,193 @@
+/* General Body Styles */
+.body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f7fafc;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .logo i {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.navbar .logo span {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar .menu {
+  display: flex;
+  gap: 30px;
+}
+
+.navbar .menu a {
+  color: #ffb400;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.navbar .menu a:hover {
+  color: #ffb400;
+}
+
+.navbar .menu a.active {
+  border-bottom: 2px solid #ffb400;
+}
+
+/* Header */
+.header {
+  position: relative;
+  background-color: #319795;
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.header img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.header input {
+  width: 50%;
+  padding: 15px;
+  border-radius: 25px;
+  border: none;
+  font-size: 1rem;
+  color: #4a5568;
+}
+
+.header input:focus {
+  outline: none;
+  box-shadow: 0 0 10px #38a169;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Features Section */
+.features {
+  background-color: white;
+  padding: 50px 20px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.feature i {
+  font-size: 2.5rem;
+  color: #ffb400;
+  margin-bottom: 20px;
+}
+
+.feature h2 {
+  font-size: 1.25rem;
+  color: #ffb400;
+  margin-bottom: 10px;
+}
+
+.feature p {
+  color: #718096;
+}
+
+/* Hospital List */
+.container {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.container .header {
+  margin: 20px 0;
+  font-size: 24px;
+  color: #28a745;
+}
+
+.hospital-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.hospital-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  width: 23%;
+  text-align: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.hospital-item:hover {
+  transform: scale(1.05);
+}
+
+.hospital-item img {
+  width: 100%;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.hospital-info {
+  padding: 15px;
+}
+
+.hospital-info h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.hospital-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.rating {
+  color: #ffb400;
+}
+
+/* Footer */
+.footer {
+  background-color: #343a40;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer a {
+  color: #28a745;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
