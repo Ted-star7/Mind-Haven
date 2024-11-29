@@ -20,6 +20,11 @@ export class ServicesService {
       .pipe(catchError(this.handleError));
   }
 
+  public getTherapistsNearby(latitude: number, longitude: number, radius: number): Observable<any> {
+    const endpoint = `/api/open/therapists/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
+    return this.httpClient.get(`${this.url}${endpoint}`).pipe(catchError(this.handleError));
+  }
+
   // Create headers method
 private createHeaders(token: string | null, isFormData: boolean = false): HttpHeaders {
   let headers = new HttpHeaders({
