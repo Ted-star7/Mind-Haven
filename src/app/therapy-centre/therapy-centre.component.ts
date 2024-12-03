@@ -9,7 +9,7 @@ interface Hospital {
   latitude: number;
   longitude: number;
   vicinity: string;
-  rating?: number;
+  rating: 4.2,
   photos?: string[];
   icon: string;
 }
@@ -27,12 +27,14 @@ export class TherapyCentreComponent implements OnInit {
   readonly latitude = -1.2921; // Default Nairobi latitude
   readonly longitude = 36.8219; // Default Nairobi longitude
   radius: number = 5000; // 5km radius
+  readonly mapboxToken =
+    'pk.eyJ1IjoiYmlndGVkIiwiYSI6ImNtNDhnZW52cTBscHQyanNvYnQ2OGF5bmgifQ.F7Ujx1zVTzQWL3AdImiF5A';
 
   constructor(private serviceService: ServicesService) {}
 
   ngOnInit(): void {
-    this.fetchHospitals();
     this.initializeMap();
+    this.fetchHospitals();
   }
 
   fetchHospitals(): void {
@@ -40,54 +42,50 @@ export class TherapyCentreComponent implements OnInit {
       .getTherapistsNearby(this.latitude, this.longitude, this.radius)
       .subscribe(
         (response: any) => {
-          // Check if the response is an array and has valid data
           if (Array.isArray(response)) {
             this.hospitals = response.map((hospitalData: any) => ({
               ...hospitalData,
               latitude: hospitalData.latitude ?? this.latitude,
               longitude: hospitalData.longitude ?? this.longitude,
-              icon: hospitalData.icon || 'assets/signup.jpg', // Provide a fallback icon
+              icon: hospitalData.icon || 'assets/signup.jpg', // Fallback icon
             }));
             this.addHospitalMarkers();
           } else {
-            console.error('Received invalid data for hospitals:', response);
-            this.hospitals = []; // Empty array in case of invalid response
+            console.error('Invalid hospital data format:', response);
+            this.hospitals = [];
           }
         },
         (error) => {
           console.error('Error fetching therapists:', error);
-          this.hospitals = []; // Fallback to empty array in case of error
+          this.hospitals = [];
         }
       );
   }
 
   initializeMap(): void {
-    // if (!mapboxgl.accessToken)
-       {
-      console.error('Mapbox access token is missing');
-      return;
-    }
     this.map = new mapboxgl.Map({
-      container: 'map',
+      container: 'map', // Ensure your HTML has an element with id="map"
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.longitude, this.latitude],
       zoom: 12,
+      accessToken: this.mapboxToken, // Pass the access token here
     });
   }
 
   addHospitalMarkers(): void {
-    if (!this.map || this.hospitals.length === 0) return;
+    if (!this.map || this.hospitals.length === 0) {
+      console.warn('No map or hospitals to display markers for');
+      return;
+    }
 
     this.hospitals.forEach((hospital) => {
-      // Create a custom marker element
       const el = document.createElement('div');
       el.className = 'hospital-marker';
-      el.style.backgroundImage = `url(${hospital.icon})`; // Use the icon from the backend
+      el.style.backgroundImage = `url(${hospital.icon})`;
       el.style.width = '30px';
       el.style.height = '30px';
       el.style.backgroundSize = 'contain';
 
-      // Add the marker to the map
       new mapboxgl.Marker(el)
         .setLngLat([hospital.longitude, hospital.latitude])
         .setPopup(
@@ -97,7 +95,14 @@ export class TherapyCentreComponent implements OnInit {
             <p>Rating: ${hospital.rating ?? 'Not available'}</p>
           `)
         )
-        // .addTo(this.map);
+        .addTo(this.map!);
     });
   }
+
+ getRatingArray(rating: number): number[] {
+  const validRating = Math.max(0, Math.min(5, Math.floor(rating || 0))); // Ensure rating is between 0 and 5
+  return Array.from({ length: validRating }); // Create an array of 'rating' length
 }
+
+}
+

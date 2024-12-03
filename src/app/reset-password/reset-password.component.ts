@@ -99,9 +99,8 @@ export class ResetPasswordComponent implements OnInit {
         newPassword: this.newPassword,
       };
 
-      this.serviceService
-        .postRequest('/api/open/auth/reset-password/confirm', resetData, null)
-        .subscribe(
+      this.serviceService.postRequest('/api/open/auth/reset-password/confirm', resetData, null)
+      .subscribe(
           () => {
             this.isLoading = false;
             this.showSnackbar('Password reset successful! Redirecting to login...');
