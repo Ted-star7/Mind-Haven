@@ -22,7 +22,7 @@
     />
     <div class="header-content">
       <h1>Find the best hospital near you...</h1>
-      <input type="text" placeholder="Enter your Location or City" />
+      <input type="text" placeholder="Enter your Location or City">
     </div>
   </div>
 
@@ -31,25 +31,17 @@
     <div class="feature">
       <i class="fas fa-hospital"></i>
       <h2>Find Nearest Hospital</h2>
-      <p>
-        Search for the nearest medical centres by entering your location or city
-        name.
-      </p>
+      <p>Search for the nearest medical centres by entering your location or city name.</p>
     </div>
     <div class="feature">
       <i class="fas fa-map-marker-alt"></i>
       <h2>Get Directions</h2>
-      <p>
-        On the map, click on your current location and the hospital of your
-        choice to get the route.
-      </p>
+      <p>On the map, click on your current location and the hospital of your choice to get the route.</p>
     </div>
     <div class="feature">
       <i class="fas fa-star"></i>
       <h2>Review Services</h2>
-      <p>
-        Leave a review of the services provided at your selected medical centre.
-      </p>
+      <p>Leave a review of the services provided at your selected medical centre.</p>
     </div>
   </div>
 
@@ -68,12 +60,8 @@
         <div class="hospital-info">
           <h3>{{ hospital.name }}</h3>
           <div class="rating">
-            <i
-              class="fas fa-star"
-              *ngFor="let star of getRatingArray(hospital.rating)"
-            ></i>
+            <i class="fas fa-star" *ngFor="let star of getRatingArray(hospital.rating)"></i>
           </div>
-
           <p>{{ hospital.vicinity }}</p>
         </div>
       </div>

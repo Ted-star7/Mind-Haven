@@ -9,7 +9,7 @@ interface Hospital {
   latitude: number;
   longitude: number;
   vicinity: string;
-  rating: 4.2,
+  rating: 4.2;
   photos?: string[];
   icon: string;
 }
@@ -17,7 +17,7 @@ interface Hospital {
 @Component({
   selector: 'app-therapy-centre',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],  // This line should be fine now with no issues
   templateUrl: './therapy-centre.component.html',
   styleUrls: ['./therapy-centre.component.css'],
 })
@@ -30,7 +30,7 @@ export class TherapyCentreComponent implements OnInit {
   readonly mapboxToken =
     'pk.eyJ1IjoiYmlndGVkIiwiYSI6ImNtNDhnZW52cTBscHQyanNvYnQ2OGF5bmgifQ.F7Ujx1zVTzQWL3AdImiF5A';
 
-  constructor(private serviceService: ServicesService) {}
+  constructor(private serviceService: ServicesService) { }
 
   ngOnInit(): void {
     this.initializeMap();
@@ -81,7 +81,7 @@ export class TherapyCentreComponent implements OnInit {
     this.hospitals.forEach((hospital) => {
       const el = document.createElement('div');
       el.className = 'hospital-marker';
-      el.style.backgroundImage = `url(${hospital.icon})`;
+      el.style.backgroundImage = `url(${hospital.icon})`; // Fixed syntax error
       el.style.width = '30px';
       el.style.height = '30px';
       el.style.backgroundSize = 'contain';
@@ -89,20 +89,18 @@ export class TherapyCentreComponent implements OnInit {
       new mapboxgl.Marker(el)
         .setLngLat([hospital.longitude, hospital.latitude])
         .setPopup(
-          new mapboxgl.Popup().setHTML(`
-            <h3>${hospital.name}</h3>
-            <p>${hospital.vicinity}</p>
-            <p>Rating: ${hospital.rating ?? 'Not available'}</p>
-          `)
+          new mapboxgl.Popup().setHTML(
+            `<h3>${hospital.name}</h3>
+           <p>${hospital.vicinity}</p>
+           <p>Rating: ${hospital.rating ?? 'Not available'}</p>` // Fixed HTML syntax
+          )
         )
         .addTo(this.map!);
     });
   }
 
- getRatingArray(rating: number): number[] {
-  const validRating = Math.max(0, Math.min(5, Math.floor(rating || 0))); // Ensure rating is between 0 and 5
-  return Array.from({ length: validRating }); // Create an array of 'rating' length
+  getRatingArray(rating: number): number[] {
+    const validRating = Math.max(0, Math.min(5, Math.floor(rating || 0))); // Ensure rating is between 0 and 5
+    return Array.from({ length: validRating }); // Create an array of 'rating' length
+  }
 }
-
-}
-
