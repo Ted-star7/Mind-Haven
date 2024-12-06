@@ -13,34 +13,62 @@
       <a href="/contact">Contact Us</a>
     </div>
   </div>
-  
+
   <div class="container">
     <div class="left">
-      <h2>Contact Us</h2>
-      <input type="text" placeholder="Name*" required />
-      <input type="text" placeholder="Phone Number" />
-      <input type="email" placeholder="Email*" required />
-      <textarea placeholder="Message" rows="4"></textarea>
-      <button>Send</button>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        
+        <h2>Contact Us</h2>
+        <input
+          formControlName="name"
+          type="text"
+          placeholder="Name*"
+          required
+        />
+        <div
+          *ngIf="
+            contactForm.get('name')?.invalid && contactForm.get('name')?.touched
+          "
+        >
+          <p>Name is required.</p>
+        </div>
+        <input formControlName="phone" type="text" placeholder="Phone Number" />
+        <input
+          formControlName="email"
+          type="email"
+          placeholder="Email*"
+          required
+        />
+        <div
+          *ngIf="
+            contactForm.get('email')?.invalid &&
+            contactForm.get('email')?.touched
+          "
+        >
+         <p>Valid email is required.</p> 
+        </div>
+        <textarea
+          formControlName="message"
+          placeholder="Message"
+          rows="4"
+        ></textarea>
+        <button type="submit" [disabled]="contactForm.invalid">Send</button>
+      </form>
     </div>
-    
+
     <div class="right">
       <h3>Get in Touch</h3>
       <div class="info">
-        <i class="fas fa-map-marker-alt"></i> Beside old pension office, Madina colony, Jahanuma, Hyderabad - 500053.
+        <h2>We would love to hear from you.</h2> 
       </div>
-      <div class="info">
-        <i class="fas fa-envelope"></i> hellofunsome.in
-      </div>
-      <div class="info">
-        <i class="fas fa-phone"></i> +91 8142923712
-      </div>
+      <div class="info"><i class="fas fa-envelope"></i> mindhaven&#64;gmail.com</div>
+      <div class="info"><i class="fas fa-phone"></i> +254705171490</div>
       <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-youtube"></i></a>
-        <a href="#"><i class="fab fa-dribbble"></i></a>
+        <!-- <a href="#"><i class="fab fa-facebook-f"></i></a> -->
+        <!-- <a href="#"><i class="fab fa-youtube"></i></a> -->
+        <a href="#"><i class="fas fa-phone"></i></a>
         <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-behance"></i></a>
+        <a href="#"><i class="fas fa-envelope"></i></a>
       </div>
     </div>
   </div>
