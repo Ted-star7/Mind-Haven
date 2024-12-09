@@ -9,7 +9,7 @@ interface Hospital {
   latitude: number;
   longitude: number;
   vicinity: string;
-  rating: 4.2;
+  rating: number;
   photos?: string[];
   icon: string;
 }
@@ -17,7 +17,7 @@ interface Hospital {
 @Component({
   selector: 'app-therapy-centre',
   standalone: true,
-  imports: [FormsModule, CommonModule],  // This line should be fine now with no issues
+  imports: [FormsModule, CommonModule],
   templateUrl: './therapy-centre.component.html',
   styleUrls: ['./therapy-centre.component.css'],
 })
@@ -27,8 +27,16 @@ export class TherapyCentreComponent implements OnInit {
   readonly latitude = -1.2921; // Default Nairobi latitude
   readonly longitude = 36.8219; // Default Nairobi longitude
   radius: number = 5000; // 5km radius
-  readonly mapboxToken =
-    'pk.eyJ1IjoiYmlndGVkIiwiYSI6ImNtNDhnZW52cTBscHQyanNvYnQ2OGF5bmgifQ.F7Ujx1zVTzQWL3AdImiF5A';
+  readonly mapboxToken = 'pk.eyJ1IjoiYmlndGVkIiwiYSI6ImNtNDhnZW52cTBscHQyanNvYnQ2OGF5bmgifQ.F7Ujx1zVTzQWL3AdImiF5A';
+
+  travelMode: string = 'driving'; // Default travel mode
+  startPoint?: mapboxgl.LngLat; // Starting point
+  endPoint?: mapboxgl.LngLat; // Destination point
+  distance?: number; // Distance in kilometers
+  duration?: number; // Duration in minutes
+  loading: boolean = false; // Loading state
+  startPointName: string = ''; // Name for the start point
+  endPointName: string = ''; // Name for the end point
 
   constructor(private serviceService: ServicesService) { }
 
@@ -38,16 +46,18 @@ export class TherapyCentreComponent implements OnInit {
   }
 
   fetchHospitals(): void {
+    this.loading = true; // Start loading
     this.serviceService
       .getTherapistsNearby(this.latitude, this.longitude, this.radius)
       .subscribe(
         (response: any) => {
+          this.loading = false; // Stop loading
           if (Array.isArray(response)) {
             this.hospitals = response.map((hospitalData: any) => ({
               ...hospitalData,
               latitude: hospitalData.latitude ?? this.latitude,
               longitude: hospitalData.longitude ?? this.longitude,
-              icon: hospitalData.icon || 'assets/signup.jpg', // Fallback icon
+              icon: hospitalData.icon || 'assets/signup.jpg',
             }));
             this.addHospitalMarkers();
           } else {
@@ -56,6 +66,7 @@ export class TherapyCentreComponent implements OnInit {
           }
         },
         (error) => {
+          this.loading = false; // Stop loading
           console.error('Error fetching therapists:', error);
           this.hospitals = [];
         }
@@ -64,12 +75,15 @@ export class TherapyCentreComponent implements OnInit {
 
   initializeMap(): void {
     this.map = new mapboxgl.Map({
-      container: 'map', // Ensure your HTML has an element with id="map"
+      container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.longitude, this.latitude],
       zoom: 12,
-      accessToken: this.mapboxToken, // Pass the access token here
+      accessToken: this.mapboxToken,
     });
+
+    // Add click event for setting points
+    this.map.on('click', (event) => this.handleMapClick(event));
   }
 
   addHospitalMarkers(): void {
@@ -81,7 +95,7 @@ export class TherapyCentreComponent implements OnInit {
     this.hospitals.forEach((hospital) => {
       const el = document.createElement('div');
       el.className = 'hospital-marker';
-      el.style.backgroundImage = `url(${hospital.icon})`; // Fixed syntax error
+      el.style.backgroundImage = `url(${hospital.icon})`;
       el.style.width = '30px';
       el.style.height = '30px';
       el.style.backgroundSize = 'contain';
@@ -91,16 +105,105 @@ export class TherapyCentreComponent implements OnInit {
         .setPopup(
           new mapboxgl.Popup().setHTML(
             `<h3>${hospital.name}</h3>
-           <p>${hospital.vicinity}</p>
-           <p>Rating: ${hospital.rating ?? 'Not available'}</p>` // Fixed HTML syntax
+             <p>${hospital.vicinity}</p>
+             <p>Rating: ${hospital.rating ?? 'Not available'}</p>`
           )
         )
         .addTo(this.map!);
     });
   }
 
+  handleMapClick(event: mapboxgl.MapMouseEvent): void {
+    const coords = event.lngLat;
+
+    if (!this.startPoint) {
+      this.startPoint = coords; // Set as starting point
+      this.startPointName = 'Start Point'; // You can change this as needed
+      new mapboxgl.Marker({ color: 'green' })
+        .setLngLat(coords)
+        .addTo(this.map!);
+    } else if (!this.endPoint) {
+      this.endPoint = coords; // Set as destination point
+      this.endPointName = 'End Point'; // You can change this as needed
+      new mapboxgl.Marker({ color: 'red' })
+        .setLngLat(coords)
+        .addTo(this.map!);
+      this.calculateRoute(); // Calculate route when both points are set
+    }
+  }
+
+  calculateRoute(): void {
+    if (!this.startPoint || !this.endPoint) return;
+
+    const routeUrl = `https://api.mapbox.com/directions/v5/mapbox/${this.travelMode}/${this.startPoint.lng},${this.startPoint.lat};${this.endPoint.lng},${this.endPoint.lat}?geometries=geojson&access_token=${this.mapboxToken}`;
+
+    fetch(routeUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (this.map && data.routes && data.routes.length > 0) {
+          const route = data.routes[0];
+          const coordinates = route.geometry.coordinates;
+
+          this.distance = parseFloat((route.distance / 1000).toFixed(2)); // Distance in km
+          this.duration = Math.round(route.duration / 60); // Duration in minutes
+
+          const routeGeoJSON = {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates,
+              },
+            },
+          };
+
+          // Add or update the route source and layer
+          if (this.map.getSource('route')) {
+            (this.map.getSource('route') as mapboxgl.GeoJSONSource).setData(routeGeoJSON.type);
+          } else {
+            this.map.addSource('route', routeGeoJSON as mapboxgl.GeoJSONSourceSpecification);
+            this.map.addLayer({
+              id: 'route',
+              type: 'line',
+              source: 'route',
+              layout: {
+                'line-join': 'round',
+                'line-cap': 'round',
+              },
+              paint: {
+                'line-color': '#007cbf',
+                'line-width': 4,
+              },
+            });
+          }
+        }
+      })
+      .catch((error) => console.error('Error fetching route:', error));
+  }
+
+  changeTravelMode(mode: string): void {
+    this.travelMode = mode;
+    if (this.startPoint && this.endPoint) {
+      this.calculateRoute(); // Recalculate route when travel mode changes
+    }
+  }
+
+  // Implement searchPlaces
+  searchPlaces(query: string): void {
+    console.log('Searching for places:', query);
+    // Implement your search logic here (e.g., API call or filtering)
+  }
+
   getRatingArray(rating: number): number[] {
-    const validRating = Math.max(0, Math.min(5, Math.floor(rating || 0))); // Ensure rating is between 0 and 5
-    return Array.from({ length: validRating }); // Create an array of 'rating' length
+    const validRating = Math.max(0, Math.min(5, Math.floor(rating || 0)));
+    return Array.from({ length: validRating });
+  }
+
+  // Implement onLocationInputChange if necessary
+  onLocationInputChange(event: any): void {
+    console.log('Location input changed:', event.target.value);
+    // Add logic to handle the change
   }
 }

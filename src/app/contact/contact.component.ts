@@ -20,6 +20,7 @@ export class ContactComponent implements OnInit {
 
   email: string ='';
   name: string = '';
+  subject: string ='';
   phoneNumber: string ='';
   message: string ='';
 
@@ -31,7 +32,8 @@ export class ContactComponent implements OnInit {
   ){
     this.contactForm= this.fb.group({
     name: ['', Validators.required],
-    phone: [''],
+    phoneNumber: [''],
+    subject: [''],
     email: ['', [Validators.required, Validators.email]],
     message: ['']
   });
@@ -46,22 +48,32 @@ export class ContactComponent implements OnInit {
     this.snackBar.open(message, 'Close', {duration});
   }
 
-  onSubmit(): void{
-    if(this.contactForm.valid){
-      this.serviceService.postRequest('/api/contact', this.contactForm.valid, null).subscribe(
-        response =>{
-          this.showSnackbar('Your Message has been sent')
+  onSubmit(): void {
+    if (this.contactForm.valid) {
+      const formData = new FormData();
+      formData.append('name', this.contactForm.get('name')?.value);
+      formData.append('phoneNumber', this.contactForm.get('phoneNumber')?.value);
+      formData.append('subject', this.contactForm.get('subject')?.value);
+      formData.append('email', this.contactForm.get('email')?.value);
+      formData.append('message', this.contactForm.get('message')?.value);
+
+      this.serviceService.postRequest('/api/open/contact-us', formData, null).subscribe(
+        response => {
+          if (response.success) {
+            this.showSnackbar('Your Message has been sent');
+            this.contactForm.reset(); // Reset the form only on success
+          } else {
+            this.showSnackbar('Failed to send Message: ' + response.message);
+          }
         },
         error => {
-          this.showSnackbar('Failed to send OTP. Please try again.');
-          console.error('OTP request error:', error);
+          this.showSnackbar('Failed to send Message');
+          console.error('Failed to send Message:', error);
         }
-      )
+      );
+    } else {
+      this.showSnackbar('Please ensure all fields are correctly filled.');
     }
-    else{
-      this.showSnackbar('Please ensure all fields are correctly filled.')
-    }
-    this.contactForm.reset();
   }
 
 }

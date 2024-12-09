@@ -1,15 +1,21 @@
 import { Component } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 // import { NgChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-therapy',
   standalone: true,
-  imports: [BaseChartDirective], // Import NgChartsModule here
+  imports: [BaseChartDirective, RouterModule], 
   templateUrl: './therapy.component.html',
   styleUrls: ['./therapy.component.css'],
 })
 export class TherapyComponent {
+
+  constructor(
+    private router: Router
+  ){}
   therapyEffectivenessData = {
     labels: ['No Improvement', 'Moderate Improvement', 'Significant Improvement'],
     datasets: [

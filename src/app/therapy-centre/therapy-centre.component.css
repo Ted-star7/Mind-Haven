@@ -123,12 +123,100 @@
 
 /* Map Section */
 .map-container {
+  position: relative;
   height: 500px;
-  margin: 30px 0;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   overflow: hidden;
+  margin-right: 300px;
+  /* Sidebar space */
 }
+
+.controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-group label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007cbf;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tabs button.active {
+  background-color: #007cbf;
+  color: white;
+  border: 1px solid #005fa3;
+}
+
+.tabs button:hover {
+  background-color: #e0e0e0;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: #f5f5f5;
+  border-left: 2px solid #ddd;
+  padding: 20px;
+  overflow-y: auto;
+  display: none;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.directions-container {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 
 /* Hospital List */
 .container {
@@ -204,3 +292,8 @@
 .footer a:hover {
   text-decoration: underline;
 }
+
+
+
+
+

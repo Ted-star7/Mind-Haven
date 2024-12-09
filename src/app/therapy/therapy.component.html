@@ -1,22 +1,25 @@
- <div class="navbar">
-    <div class="logo">
-      <i class="fas fa-peace"></i>
-      <span>MindHaven</span>
-    </div>
-    <div class="menu">
-      <a href="/" class="active">Home</a>
-      <a href="/therapy-centre">Therapy Centres</a>
-      <a href="/therapy">Therapy</a>
-      <a href="/signup">Log in</a>
-      <a href="/contact">Contact Us</a>
-    </div>
+<div class="navbar">
+  <div class="logo">
+    <i class="fas fa-peace"></i>
+    <span>MindHaven</span>
   </div>
+  <div class="menu">
+    <a href="/" class="active">Home</a>
+    <a href="/therapy-centre">Therapy Centres</a>
+    <a href="/therapy">Therapy</a>
+    <a href="/signup">Log in</a>
+    <a href="/contact">Contact Us</a>
+  </div>
+</div>
 
 <div class="therapy-header">
   <img src="assets/therapy1.jpg" alt="Therapy" class="therapy-image" />
   <div class="header-text">
     <h1>Therapy</h1>
-    <p>Your mental health is just as important as your physical health. Therapy can help you achieve a happier, more balanced life.</p>
+    <p>
+      Your mental health is just as important as your physical health. Therapy
+      can help you achieve a happier, more balanced life.
+    </p>
   </div>
 </div>
 
@@ -33,63 +36,123 @@
 
   <section id="what-is-therapy">
     <h3>What Is Therapy?</h3>
-    <p>Therapy is a structured approach where individuals engage with a trained professional to address challenges such as mental health issues, personal growth, or coping with life changes.</p>
-    <p>It often includes exploring feelings, thoughts, and behaviors, aiming to enhance overall well-being. Therapy can be short-term for specific issues or long-term for more in-depth self-discovery.</p>
-    <blockquote>“Whether you want to address a specific mental health issue or look for general ways to improve yourself, talk therapy could be an effective strategy to meet your goals.”<br>— <em>Amy Morin, LCSW</em></blockquote>
+    <p>
+      Therapy is a structured approach where individuals engage with a trained
+      professional to address challenges such as mental health issues, personal
+      growth, or coping with life changes.
+    </p>
+    <p>
+      It often includes exploring feelings, thoughts, and behaviors, aiming to
+      enhance overall well-being. Therapy can be short-term for specific issues
+      or long-term for more in-depth self-discovery.
+    </p>
+    <blockquote>
+      “Whether you want to address a specific mental health issue or look for
+      general ways to improve yourself, talk therapy could be an effective
+      strategy to meet your goals.”<br />— <em>Amy Morin, LCSW</em>
+    </blockquote>
     <div>
-      <canvas baseChart 
+      <canvas
+        baseChart
         [data]="therapyEffectivenessData"
         [options]="chartOptions"
-        chartType="bar">
+        chartType="bar"
+      >
       </canvas>
     </div>
-    <p><strong>Stat:</strong> Studies show that therapy reduces symptoms of anxiety by 60% within the first three months.</p>
+    <p>
+      <strong>Stat:</strong> Studies show that therapy reduces symptoms of
+      anxiety by 60% within the first three months.
+    </p>
   </section>
 
   <section id="do-i-need-therapy">
     <h3>Do I Need Therapy?</h3>
-    <p>You might benefit from therapy if you're feeling overwhelmed, struggling with relationships, or seeking self-improvement. Therapy offers tools to navigate life's challenges with resilience.</p>
-    <p>Signs you may need therapy include persistent sadness, inability to concentrate, or difficulty in managing everyday tasks.</p>
-    <blockquote>“It’s okay to ask for help. Doing so is one of the bravest things you can do for yourself.”<br>— <em>Dr. Brené Brown</em></blockquote>
+    <p>
+      You might benefit from therapy if you're feeling overwhelmed, struggling
+      with relationships, or seeking self-improvement. Therapy offers tools to
+      navigate life's challenges with resilience.
+    </p>
+    <p>
+      Signs you may need therapy include persistent sadness, inability to
+      concentrate, or difficulty in managing everyday tasks.
+    </p>
+    <blockquote>
+      “It’s okay to ask for help. Doing so is one of the bravest things you can
+      do for yourself.”<br />— <em>Dr. Brené Brown</em>
+    </blockquote>
     <div>
-      <canvas baseChart
+      <canvas
+        baseChart
         [data]="reasonsForTherapyData"
         [options]="chartOptions"
-        chartType="pie">
+        chartType="pie"
+      >
       </canvas>
     </div>
   </section>
 
   <section id="therapy-cost">
     <h3>How Much Does Therapy Cost?</h3>
-    <p>The cost of therapy varies widely based on location, therapist credentials, and session type. On average, a session can range from $50 to $200. However, there are affordable options like sliding scales and insurance coverage.</p>
-    <p>Online platforms like BetterHelp or Talkspace offer virtual sessions starting at $60 per week.</p>
+    <p>
+      The cost of therapy varies widely based on location, therapist
+      credentials, and session type. On average, a session can range from $50 to
+      $200. However, there are affordable options like sliding scales and
+      insurance coverage.
+    </p>
+    <p>
+      Online platforms like BetterHelp or Talkspace offer virtual sessions
+      starting at $60 per week.
+    </p>
   </section>
 
   <section id="how-therapy-works">
     <h3>How Does Therapy Work?</h3>
-    <p>Therapy typically starts with an initial consultation to understand your concerns. The therapist then develops a tailored plan to help you achieve your goals.</p>
-    <p>Sessions often involve discussing challenges, identifying triggers, and learning coping strategies. Consistency and openness are key to success in therapy.</p>
+    <p>
+      Therapy typically starts with an initial consultation to understand your
+      concerns. The therapist then develops a tailored plan to help you achieve
+      your goals.
+    </p>
+    <p>
+      Sessions often involve discussing challenges, identifying triggers, and
+      learning coping strategies. Consistency and openness are key to success in
+      therapy.
+    </p>
   </section>
 
   <section id="get-started">
     <h3>How to Get Started With Therapy</h3>
-    <p>Begin by identifying your needs. Do you prefer in-person or online therapy? Research therapists and schedule an initial session to find the right fit.</p>
-    <p>Consider factors like therapist credentials, approach, and specialties to ensure they align with your goals.</p>
+    <p>
+      Begin by identifying your needs. Do you prefer in-person or online
+      therapy? Research therapists and schedule an initial session to find the
+      right fit.
+    </p>
+    <p>
+      Consider factors like therapist credentials, approach, and specialties to
+      ensure they align with your goals.
+    </p>
   </section>
 
   <section id="techniques-types">
     <h3>Techniques and Types of Therapy</h3>
     <p>There are various therapy approaches:</p>
     <ul>
-      <li><strong>Cognitive Behavioral Therapy (CBT):</strong> Focuses on changing negative thought patterns.</li>
-      <li><strong>Mindfulness-Based Therapy:</strong> Enhances awareness and acceptance of the present moment.</li>
-      <li><strong>Psychodynamic Therapy:</strong> Explores unconscious processes and past experiences.</li>
+      <li>
+        <strong>Cognitive Behavioral Therapy (CBT):</strong> Focuses on changing
+        negative thought patterns.
+      </li>
+      <li>
+        <strong>Mindfulness-Based Therapy:</strong> Enhances awareness and
+        acceptance of the present moment.
+      </li>
+      <li>
+        <strong>Psychodynamic Therapy:</strong> Explores unconscious processes
+        and past experiences.
+      </li>
     </ul>
     <p>Choose a method that resonates with your personal needs and goals.</p>
   </section>
- 
 </div>
-   <footer>
-    <p>&copy; 2024 MindHaven. All rights reserved.</p>
-  </footer>
+<footer>
+  <p>&copy; 2024 MindHaven. All rights reserved.</p>
+</footer>
