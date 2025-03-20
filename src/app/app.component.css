@@ -1,0 +1,51 @@
+/* Ensure the entire layout takes full height */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+/* Main wrapper - Ensures full height */
+.wrap {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  /* Ensure full width */
+}
+
+/* Sidebar styling */
+app-sidebar {
+  width: 250px;
+  /* Sidebar width */
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f2eed8;
+  /* Adjust theme */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  /* Ensure it stays on top */
+}
+
+/* Main content area */
+.outlet {
+  flex-grow: 1;
+  /* Takes full available space */
+  margin-left: 250px;
+  /* Adjust based on sidebar */
+  /* padding: 20px; */
+  width: calc(100vw - 250px);
+  /* Adjust width minus sidebar */
+  height: 100vh;
+  overflow-y: auto;
+  /* background-color: #f2f2f2; */
+}
+
+/* When sidebar is hidden */
+.hide-sidebar .outlet {
+  margin-left: 0;
+  width: 100vw;
+}

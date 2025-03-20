@@ -136,7 +136,7 @@ onSubmitSignIn(form: NgForm): void {
         this.sessionService.saveId(id);  
 
         this.showSnackbar('Login successful!');
-        this.router.navigate(['']);
+        this.router.navigate(['/sidebar']);
       } else {
         this.showSnackbar('Login failed: Invalid response from server.', 5000);
       }

@@ -29,6 +29,7 @@ export class TherapyCentreComponent implements OnInit {
   radius: number = 5000; // 5km radius
   readonly mapboxToken = 'pk.eyJ1IjoiYmlndGVkIiwiYSI6ImNtNDhnZW52cTBscHQyanNvYnQ2OGF5bmgifQ.F7Ujx1zVTzQWL3AdImiF5A';
 
+  transportMode: string = 'driving';
   travelMode: string = 'driving'; // Default travel mode
   startPoint?: mapboxgl.LngLat; // Starting point
   endPoint?: mapboxgl.LngLat; // Destination point
@@ -92,6 +93,12 @@ export class TherapyCentreComponent implements OnInit {
       return;
     }
 
+    // Clear existing markers
+    const markers = document.getElementsByClassName('hospital-marker');
+    while (markers[0]) {
+      markers[0].parentNode?.removeChild(markers[0]);
+    }
+
     this.hospitals.forEach((hospital) => {
       const el = document.createElement('div');
       el.className = 'hospital-marker';
@@ -135,7 +142,7 @@ export class TherapyCentreComponent implements OnInit {
   calculateRoute(): void {
     if (!this.startPoint || !this.endPoint) return;
 
-    const routeUrl = `https://api.mapbox.com/directions/v5/mapbox/${this.travelMode}/${this.startPoint.lng},${this.startPoint.lat};${this.endPoint.lng},${this.endPoint.lat}?geometries=geojson&access_token=${this.mapboxToken}`;
+    const routeUrl = `https://api.mapbox.com/directions/v5/mapbox/${this.transportMode}/${this.startPoint.lng},${this.startPoint.lat};${this.endPoint.lng},${this.endPoint.lat}?geometries=geojson&access_token=${this.mapboxToken}`;
 
     fetch(routeUrl)
       .then((response) => response.json())
@@ -147,23 +154,26 @@ export class TherapyCentreComponent implements OnInit {
           this.distance = parseFloat((route.distance / 1000).toFixed(2)); // Distance in km
           this.duration = Math.round(route.duration / 60); // Duration in minutes
 
-          const routeGeoJSON = {
-            type: 'geojson',
-            data: {
+          const routeGeoJSON: GeoJSON.FeatureCollection = {
+            type: 'FeatureCollection',
+            features: [{
               type: 'Feature',
               properties: {},
               geometry: {
                 type: 'LineString',
                 coordinates,
               },
-            },
+            }],
           };
 
-          // Add or update the route source and layer
+          // If source already exists, update the data, otherwise add a new source
           if (this.map.getSource('route')) {
-            (this.map.getSource('route') as mapboxgl.GeoJSONSource).setData(routeGeoJSON.type);
+            (this.map.getSource('route') as mapboxgl.GeoJSONSource).setData(routeGeoJSON);
           } else {
-            this.map.addSource('route', routeGeoJSON as mapboxgl.GeoJSONSourceSpecification);
+            this.map.addSource('route', {
+              type: 'geojson',
+              data: routeGeoJSON
+            });
             this.map.addLayer({
               id: 'route',
               type: 'line',
@@ -183,6 +193,8 @@ export class TherapyCentreComponent implements OnInit {
       .catch((error) => console.error('Error fetching route:', error));
   }
 
+
+
   changeTravelMode(mode: string): void {
     this.travelMode = mode;
     if (this.startPoint && this.endPoint) {
@@ -190,20 +202,21 @@ export class TherapyCentreComponent implements OnInit {
     }
   }
 
-  // Implement searchPlaces
   searchPlaces(query: string): void {
     console.log('Searching for places:', query);
     // Implement your search logic here (e.g., API call or filtering)
   }
 
-  getRatingArray(rating: number): number[] {
-    const validRating = Math.max(0, Math.min(5, Math.floor(rating || 0)));
-    return Array.from({ length: validRating });
+  // Adding missing methods and properties to resolve errors
+  onLocationInputChange(event: any): void {
+    console.log('Location input changed', event);
   }
 
-  // Implement onLocationInputChange if necessary
-  onLocationInputChange(event: any): void {
-    console.log('Location input changed:', event.target.value);
-    // Add logic to handle the change
+  setTransportMode(mode: string): void {
+    this.travelMode = mode;
+  }
+
+  getRatingArray(rating: number): number[] {
+    return Array(Math.round(rating)); // Generates an array to show stars for rating
   }
 }

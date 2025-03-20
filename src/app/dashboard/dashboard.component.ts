@@ -6,16 +6,18 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports:[]
+  imports: []
 })
 export class DashboardComponent {
-constructor(
-    private router: Router
-  ){}
+  isMenuOpen = false; 
 
-navigateToSignup(): void{
-  this.router.navigate(['/signup']);
+  constructor(private router: Router) { }
+
+  navigateToSignup(): void {
+    this.router.navigate(['/signup']);
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen; 
+  }
 }
-}
-
-

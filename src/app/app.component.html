@@ -1,6 +1,9 @@
-<div class="wrap">
-  <router-outlet></router-outlet>
-</div>
-   
+<div class="wrap" [class.hide-sidebar]="hideSidebar">
+  <!-- Sidebar -->
+  <app-sidebar *ngIf="!hideSidebar"></app-sidebar>
 
-  
+  <!-- Main Content -->
+  <div class="outlet">
+    <router-outlet></router-outlet>
+  </div>
+</div>

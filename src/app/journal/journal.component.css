@@ -1,0 +1,113 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #F5F5F5;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.sidebar {
+  background-color: #2D2D2D;
+  color: white;
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  padding: 16px;
+}
+
+.main-content {
+  margin-left: 25px;
+  padding: 20px;
+  width: calc(100% - 25px);
+  min-height: 100vh;
+}
+
+.top-bar {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #F25C05;
+}
+
+.top-bar .icons i {
+  margin-left: 16px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #F25C05;
+}
+
+.mood-picker {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.mood-picker div {
+  text-align: center;
+  cursor: pointer;
+}
+
+.mood-picker div .emoji {
+  font-size: 32px;
+}
+
+.entry-content {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.tags-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.save-button {
+  background-color: #F25C05;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.fab {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background-color: #F25C05;
+  color: white;
+  padding: 16px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 24px;
+}

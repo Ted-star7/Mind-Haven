@@ -5,13 +5,19 @@
         <i class="fas fa-peace"> </i>
         <span> MindHaven </span>
       </div>
-      <div class="menu">
+      <div class="menu" [class.active]="isMenuOpen">
         <a href> Home </a>
         <a href="/therapy-centre"> Therapy Centre's </a>
         <a href="/therapy">Therapy</a>
         <a href="/signup"> Log in </a>
         <a href="/contact"> Contact us</a>
       </div>
+      <div class="hamburger" (click)="toggleMenu()">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+    
     </div>
     <div class="hero">
       <div class="content">

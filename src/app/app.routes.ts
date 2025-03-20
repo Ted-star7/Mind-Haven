@@ -6,6 +6,9 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { TherapyCentreComponent } from './therapy-centre/therapy-centre.component';
 import { ContactComponent } from './contact/contact.component';
 import { TherapyComponent } from './therapy/therapy.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { JournalComponent } from './journal/journal.component';
+import { ArticlesComponent } from './articles/articles.component';
 
 
 export const routes: Routes = [
@@ -16,6 +19,9 @@ export const routes: Routes = [
   {path: 'therapy', component:TherapyComponent},
   {path: 'therapy-centre', component: TherapyCentreComponent},
   {path: 'resetpassword', component: ResetPasswordComponent},
-  {path: 'contact', component:ContactComponent}
+  {path: 'contact', component:ContactComponent},
+  {path: 'sidebar', component: SidebarComponent},
+  {path: 'journal', component: JournalComponent},
+  {path: 'articles', component: ArticlesComponent}
   
 ];

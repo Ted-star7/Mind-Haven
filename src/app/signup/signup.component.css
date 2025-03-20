@@ -165,7 +165,7 @@ button+.loading-spinner {
   align-items: center;
   display: inline-block;
   width: 24px;
-  height: 24px;
+  height: 24 px;
   border: 4px solid #f3f3f3;
   border-top: 4px solid #7b5cf2;
   border-radius: 50%;
@@ -183,6 +183,7 @@ button+.loading-spinner {
     transform: rotate(360deg);
   }
 }
+
 /* Eye icon for password visibility toggle */
 .eye-icon {
   position: absolute;
@@ -220,4 +221,37 @@ button+.loading-spinner {
     left: 20px;
     z-index: 10;
   }
+
+  input {
+    font-size: 0.9rem;
+  }
+
+  button {
+    width: 80%;
+  }
+
+ .checkbox-container {
+   display: flex;
+   align-items: center;
+   /* Aligns checkbox and label vertically */
+   justify-content: flex-start;
+   /* Aligns items to the start */
+   margin-right: 10px;
+   margin-bottom: 10px;
+   /* Add some space below the checkbox */
+ }
+
+ .checkbox-container input {
+   margin-right: 0.5rem;
+   /* Space between checkbox and label */
+ }
+
+ .checkbox-container label {
+   margin: 0;
+   margin-bottom: 16px;
+   /* Remove any default margin */
+   font-size: 0.875rem;
+   /* Keep the font size consistent */
+   color: #555;
+ }
 }

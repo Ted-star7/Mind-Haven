@@ -1,31 +1,36 @@
 <div class="body">
   <!-- Navbar -->
-  <div class="navbar">
+  <nav class="navbar">
     <div class="logo">
       <i class="fas fa-peace"></i>
       <span>MindHaven</span>
     </div>
-    <div class="menu">
+    <ul class="menu">
       <a href="/" class="active">Home</a>
       <a href="/therapy-centre">Therapy Centres</a>
       <a href="/therapy">Therapy</a>
       <a href="/signup">Log in</a>
       <a href="/contact">Contact Us</a>
-    </div>
-  </div>
+    </ul>
+  </nav>
 
   <!-- Header -->
-  <div class="header">
+  <header class="header">
     <img src="/assets/doc1.jpg" alt="A medical professional holding a stethoscope" />
     <div class="header-content">
       <h1>Find the best hospital near you...</h1>
-      <input type="text" placeholder="Enter your Location or City" (input)="onLocationInputChange($event)" />
-      <div *ngIf="loading">Loading...</div>
+      <input
+        type="text"
+        placeholder="Enter your Location or City"
+        (input)="onLocationInputChange($event)"
+        aria-label="Search for location"
+      />
+      <div *ngIf="loading" class="loading-spinner">Loading...</div>
     </div>
-  </div>
+  </header>
 
-  <!-- Features -->
-  <div class="features">
+  <!-- Features Section -->
+  <section class="features">
     <div class="feature">
       <i class="fas fa-hospital"></i>
       <h2>Find Nearest Hospital</h2>
@@ -34,61 +39,41 @@
     <div class="feature">
       <i class="fas fa-map-marker-alt"></i>
       <h2>Get Directions</h2>
-      <p>On the map, click on your current location and the hospital of your choice to get the route.</p>
+      <p>Click on your current location and the hospital of your choice on the map to get the route.</p>
     </div>
     <div class="feature">
       <i class="fas fa-star"></i>
       <h2>Review Services</h2>
       <p>Leave a review of the services provided at your selected medical centre.</p>
     </div>
-  </div>
+  </section>
 
   <!-- Map Section -->
-  <div class="map-container">
+  <section class="map-section">
     <div id="map" class="map">
-    <div class="controls">
-      <div class="input-group">
-        <label class="a">A</label>
-        <input
-          id="startPointInput"
-          placeholder="Choose a starting place"
-          type="text"
-          [(ngModel)]="startPointName"
-          (input)="searchPlaces('start')"
-        />
-        <span *ngIf="startPoint">Coordinates: {{ startPoint.lng }}, {{ startPoint.lat }}</span>
-      </div>
-
-      <div class="input-group">
-        <label class="b">B</label>
-        <input
-          id="endPointInput"
-          placeholder="Choose destination"
-          type="text"
-          [(ngModel)]="endPointName"
-          (input)="searchPlaces('end')"
-        />
-        <span *ngIf="endPoint">Coordinates: {{ endPoint.lng }}, {{ endPoint.lat }}</span>
-      </div>
+      
     </div>
-    </div>
-</div>
     
-  <!-- Sidebar for Directions -->
-  <div class="sidebar">
+  </section>
+
+  <!-- Directions Sidebar -->
+  <aside class="sidebar">
     <h3>Directions</h3>
     <div id="directionsContainer" class="directions-container">
       <p>Select a start and end point on the map to get directions.</p>
     </div>
-  </div>
+  </aside>
 
-  <!-- Top Rated Hospitals Near Me -->
-  <div class="container">
-    <div class="header">Top Rated Hospitals Near Me</div>
+  <!-- Top Rated Hospitals Section -->
+  <section class="container">
+    <h2 class="section-header">Top Rated Hospitals Near Me</h2>
     <div class="hospital-list">
-      <!-- Dynamically rendered list of hospitals -->
       <div *ngFor="let hospital of hospitals" class="hospital-item">
-        <img [src]="hospital.photos?.[0] || 'assets/signup.jpg'" [alt]="hospital.name" />
+        <img
+          [src]="hospital.photos?.[0] || 'assets/signup.jpg'"
+          [alt]="hospital.name"
+          class="hospital-photo"
+        />
         <div class="hospital-info">
           <h3>{{ hospital.name }}</h3>
           <div class="rating">
@@ -98,10 +83,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Footer -->
-  <div class="footer">
-    2024 © <a href="#">MindHaven</a>. All rights reserved.
-  </div>
+  <footer class="footer">
+    <p>2024 © <a href="#">MindHaven</a>. All rights reserved.</p>
+  </footer>
 </div>
