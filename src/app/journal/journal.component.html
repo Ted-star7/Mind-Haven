@@ -1,11 +1,21 @@
 <!-- Top Bar -->
 <div class="top-bar">
     <div class="logo">MindHaven</div>
-    
 </div>
 
 <!-- Main Content -->
 <div class="main-content">
+    <!-- Status Messages -->
+    <div *ngIf="saveSuccess" class="alert success">
+        Entry saved successfully!
+    </div>
+    <div *ngIf="saveError" class="alert error">
+        Please select a mood and make sure you're logged in.
+    </div>
+    <div *ngIf="loading" class="alert loading">
+        Loading...
+    </div>
+
     <!-- Journaling Information Section -->
     <div class="card info-card">
         <h2>Why Journal Your Mood & Gratitude?</h2>
@@ -23,21 +33,11 @@
         <h2>Select Your Mood</h2>
         <p>Choose an emoji that best represents how you're feeling today.</p>
         <div class="mood-picker">
-            <div>
-                <div class="emoji">😊</div>
-                <div>Happy – Feeling joyful and content</div>
-            </div>
-            <div>
-                <div class="emoji">😐</div>
-                <div>Neutral – Feeling okay but not overly happy or sad</div>
-            </div>
-            <div>
-                <div class="emoji">😢</div>
-                <div>Sad – Feeling down or emotionally low</div>
-            </div>
-            <div>
-                <div class="emoji">🌟</div>
-                <div>Proud – Achieved something meaningful</div>
+            <div *ngFor="let mood of moods" 
+                 (click)="selectMood(mood.label)"
+                 [class.selected]="selectedMood === mood.label">
+                <div class="emoji">{{mood.emoji}}</div>
+                <div>{{mood.label}} – {{mood.description}}</div>
             </div>
         </div>
     </div>
@@ -46,17 +46,16 @@
     <div class="card">
         <h2>Gratitude Journal</h2>
         <p>Practicing gratitude rewires your brain to focus on positivity. Instead of just listing things, try explaining why you're grateful for them.</p>
-        <textarea class="entry-content" placeholder="What are you grateful for today? Write your thoughts here..."></textarea>
-        <input class="tags-input" type="text" placeholder="Add tags (e.g., Family, Health, Work)...">
-        <button class="save-button">Save Entry</button>
+        <textarea class="entry-content" 
+                  [(ngModel)]="gratitudeEntry"
+                  placeholder="What are you grateful for today? Write your thoughts here..."></textarea>
+        <input class="tags-input" 
+               type="text" 
+               [(ngModel)]="tags"
+               placeholder="Add tags (e.g., Family, Health, Work)...">
+        <button class="save-button" (click)="saveJournalEntry()">Save Entry</button>
     </div>
 
-    <!-- Mood Timeline & Insights -->
-    <div class="card">
-        <h2>Mood Timeline</h2>
-        <p>Track how your mood has changed over time and find patterns that impact your well-being.</p>
-        <div class="timeline"></div>
-    </div>
     <!-- Scientific Backing -->
     <div class="card quote-card">
         <h2>The Science Behind Gratitude</h2>
@@ -67,22 +66,23 @@
     <!-- Past Entries -->
     <div class="card entries">
         <h2>Past Journal Entries</h2>
-        <div class="entry">
+        <div *ngIf="pastEntries.length === 0" class="no-entries">
+            No entries yet. Start by adding your first journal entry above.
+        </div>
+        <div *ngFor="let entry of pastEntries" class="entry">
             <div class="details">
-                <div class="emoji">😊</div>
+                <div class="emoji">{{ getMoodEmoji(entry.mood) }}</div>
                 <div>
-                    <div class="date">March 20, 2025</div>
-                    <div class="preview">"Had a great conversation with an old friend..."</div>
+                    <div class="date">{{ formatDate(entry.date) }}</div>
+                    <div class="preview">{{ entry.description || 'No description' }}</div>
                 </div>
             </div>
-            <div class="tags">
-                <span>Friends</span>
-                <span>Support</span>
+            <div class="tags" *ngIf="entry.tags">
+                <span *ngFor="let tag of entry.tags.split(',')">{{ tag.trim() }}</span>
             </div>
+            <button class="delete-button" (click)="deleteEntry(entry.id)">Delete</button>
         </div>
     </div>
-
-    
 </div>
 
 <!-- Floating Action Button for Quick Entry -->

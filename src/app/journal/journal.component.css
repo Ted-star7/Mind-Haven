@@ -111,3 +111,94 @@ body {
   cursor: pointer;
   font-size: 24px;
 }
+/* Add these to your existing CSS */
+.mood-picker div {
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.mood-picker div.selected {
+  background-color: #F25C05;
+  color: white;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  color: white;
+}
+
+.alert.success {
+  background-color: #4CAF50;
+}
+
+.alert.error {
+  background-color: #f44336;
+}
+
+.alert.loading {
+  background-color: #2196F3;
+}
+
+.entry {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+  position: relative;
+}
+
+.entry:last-child {
+  border-bottom: none;
+}
+
+.entry .details {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.entry .emoji {
+  font-size: 24px;
+}
+
+.entry .date {
+  font-weight: bold;
+  color: #F25C05;
+}
+
+.entry .preview {
+  color: #666;
+  margin-top: 5px;
+}
+
+.tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tags span {
+  background-color: #f0f0f0;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 15px;
+  right: 0;
+  background: none;
+  border: none;
+  color: #f44336;
+  cursor: pointer;
+}
+
+.no-entries {
+  color: #666;
+  font-style: italic;
+  padding: 15px 0;
+  text-align: center;
+}

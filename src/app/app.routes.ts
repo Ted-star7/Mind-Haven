@@ -9,6 +9,8 @@ import { TherapyComponent } from './therapy/therapy.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { JournalComponent } from './journal/journal.component';
 import { ArticlesComponent } from './articles/articles.component';
+import { MainComponent } from './main/main.component';
+import { CommunityComponent } from './community/community.component';
 
 
 export const routes: Routes = [
@@ -22,6 +24,8 @@ export const routes: Routes = [
   {path: 'contact', component:ContactComponent},
   {path: 'sidebar', component: SidebarComponent},
   {path: 'journal', component: JournalComponent},
-  {path: 'articles', component: ArticlesComponent}
+  {path: 'articles', component: ArticlesComponent},
+  {path: 'dashboard', component: MainComponent},
+  {path: 'community', component: CommunityComponent}
   
 ];

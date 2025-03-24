@@ -25,6 +25,28 @@ export class ServicesService {
     return this.httpClient.get(`${this.url}${endpoint}`).pipe(catchError(this.handleError));
   }
 
+
+
+  // POST Request for File Upload (e.g., property images)
+  public postFormData(endpoint: string, formData: any): Observable<any> {
+    return this.httpClient.post(`${this.url}${endpoint}`, formData)
+      .pipe(catchError(this.handleError));
+  }
+
+  public getRequest(endpoint: string): Observable<any> {
+    console.log(`Making GET request to: ${this.url}${endpoint}`);
+    return this.httpClient.get(`${this.url}${endpoint}`)
+      .pipe(
+        catchError(this.handleError),
+        
+      );
+  }
+
+  public deleteRequest(endpoint: string, token: string | null): Observable<any> {
+    const headers = this.createHeaders(token);
+    return this.httpClient.delete(`${this.url}${endpoint}`, { headers })
+      .pipe(catchError(this.handleError));
+  }
   // Create headers method
 private createHeaders(token: string | null, isFormData: boolean = false): HttpHeaders {
   let headers = new HttpHeaders({

@@ -1,12 +1,62 @@
-<div class="body">
-    <div class="sidebar">
-        <h2>MindHaven</h2>
-        <a href="journal"><i class="fas fa-book"></i>Journal</a>
-        <a href="mindhaven-ai"><i class="fas fa-robot"></i>MindHaven AI</a>
-        <a href="quizzes"><i class="fas fa-question-circle"></i>Quizzes</a>
-        <a href="community"><i class="fas fa-users"></i>Community (Talk Program)</a>
-        <!-- <a href="therapy"><i class="fas fa-heart"></i>Therapy</a> -->
-        <a href="articles"><i class="fas fa-newspaper"></i>Articles</a>
-        <a href="/" class="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+<nav class="sidebar" [class.active]="isSidebarOpen">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <h2>MindHaven</h2>
+  </div>
+
+  <!-- Menu Items -->
+  <div class="menu-items">
+    <a [routerLink]="'/dashboard'" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-home"></i>
+      <span>Dashboard</span>
+    </a>
+    <a [routerLink]="'/journal'" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-book"></i>
+      <span>Journal</span>
+    </a>
+    <a [routerLink]="'/mindhaven-ai'" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-robot"></i>
+      <span>MindHaven AI</span>
+    </a>
+    <a [routerLink]="'/quizzes'" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-question-circle"></i>
+      <span>Quizzes</span>
+    </a>
+    <a [routerLink]="'/community'" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-users"></i>
+      <span>Community</span>
+    </a>
+    <a [routerLink]="'/articles'" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-newspaper"></i>
+      <span>Articles</span>
+    </a>
+    
+  </div>
+
+     <a [routerLink]="'/'" class="logout" (click)="closeSidebar(); logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </a>
+
+  <!-- Bottom Section (User & Logout) -->
+  <div class="bottom-section">
+    <div class="user-profile">
+      <div class="profile-icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="profile-info">
+        <div class="username">{{userEmail}}</div>
+        <div class="status">Active</div>
+      </div>
     </div>
+ 
+  </div>
+</nav>
+
+<!-- Mobile Toggle Button -->
+<div class="menu-toggle" (click)="toggleSidebar()">
+  <i class="fas fa-bars"></i>
 </div>
+
+<!-- Overlay -->
+<div class="overlay" *ngIf="isSidebarOpen" (click)="closeSidebar()"></div>

@@ -1,0 +1,56 @@
+<main class="main-content">
+  <h1>Welcome to MindHaven</h1>
+  <p>Your mental health journey starts here. Take the first step today!</p>
+
+  <!-- Streak Section -->
+  <div class="streak-card" [class.warning]="streakWarning">
+    <h2>🔥 Your Streak: {{streak}} Days</h2>
+    <p>{{getStreakMessage()}}</p>
+    <a routerLink="/journal" class="cta-button">
+      {{streak > 0 ? 'Continue Journaling' : 'Start Journaling'}}
+    </a>
+    <div *ngIf="streakWarning" class="streak-alert">
+      ⏰ Don't break your streak! Journal now to keep it alive.
+    </div>
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="cards-container">
+    <div class="card">
+      <h2>📖 Journal</h2>
+      <p>
+        Track your thoughts and emotions. <a routerLink="/journal">Go to Journal</a>.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>🤖 MindHaven AI</h2>
+      <p>
+        Get personalized mental health insights.
+        <a routerLink="/mindhaven-ai">Try AI Support</a>.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>📝 Quizzes</h2>
+      <p>
+        Understand your mental health better. <a routerLink="/quizzes">Take a Quiz</a>.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>💬 Community</h2>
+      <p>
+        Connect with others on the same journey.
+        <a routerLink="/community">Join the Community</a>.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>📚 Articles</h2>
+      <p>
+        Explore mental health resources. <a routerLink="/articles">Read Articles</a>.
+      </p>
+    </div>
+  </div>
+</main>

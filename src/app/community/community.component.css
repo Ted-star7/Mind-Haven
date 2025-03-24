@@ -1,0 +1,101 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f4f6;
+}
+
+
+.main-content {
+  padding: 16px;
+}
+
+.main-content h1 {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.main-content p {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.community-card {
+  background-color: #fff;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.community-card h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.community-card p {
+  font-size: 16px;
+}
+
+.community-card .feedback {
+  margin-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.community-card .feedback p {
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.community-card .feedback .user {
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+.community-card form {
+  margin-top: 16px;
+}
+
+.community-card form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.community-card form button {
+  background-color: #4a90e2;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.community-card form button:hover {
+  background-color: #357ab8;
+}
+
+.community-card .quote {
+  font-style: italic;
+  color: #555;
+  margin-top: 16px;
+}
+
+.community-card .quote::before {
+  content: "“";
+  font-size: 24px;
+  vertical-align: top;
+  color: #4a90e2;
+}
+
+.community-card .quote::after {
+  content: "”";
+  font-size: 24px;
+  vertical-align: bottom;
+  color: #4a90e2;
+}

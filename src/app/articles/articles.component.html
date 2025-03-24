@@ -1,1 +1,44 @@
-<p>articles works!</p>
+<!-- Main Content -->
+<main>
+    <!-- Left Column -->
+    <div class="left-column">
+        <!-- Featured Article -->
+        <div *ngIf="!loading && featuredArticles.length > 0" class="featured-article">
+            <img [src]="featuredArticles[0].image || 'https://placehold.co/600x300'" alt="Featured article">
+            <h2>{{featuredArticles[0].title}}</h2>
+            <p>{{featuredArticles[0].description}}</p>
+            <div class="author">
+                <img [src]="featuredArticles[0].authorImage || 'https://placehold.co/50x50'" alt="Author">
+                <div>
+                    <p>{{featuredArticles[0].author || 'Unknown Author'}}</p>
+                    <p>{{featuredArticles[0].publishedAt | date}}</p>
+                </div>
+            </div>
+            <button (click)="openArticle(featuredArticles[0])">Read More</button>
+        </div>
+
+        <!-- Articles Grid -->
+        <div *ngIf="!loading" class="articles-grid">
+            <div *ngFor="let article of articles" class="article-card">
+                <img [src]="article.image || 'https://placehold.co/300x200'" alt="Article Image">
+                <h3>{{article.title}}</h3>
+                <p>{{article.description}}</p>
+                <button (click)="openArticle(article)">Read More</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+        <div class="sidebar-articles">
+            <h3>Recent Articles</h3>
+            <div *ngFor="let article of recentArticles" class="sidebar-article">
+                <img [src]="article.image || 'https://placehold.co/80x80'" alt="Article Image">
+                <div>
+                    <h4>{{article.title}}</h4>
+                    <p>{{article.publishedAt | date}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

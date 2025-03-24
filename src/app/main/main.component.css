@@ -1,0 +1,112 @@
+/* General Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f4f6;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 24px;
+}
+
+.main-content h1 {
+  font-size: 34px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.main-content p {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+/* Streak Card */
+.streak-card {
+  background-color: #ffe4b5;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.streak-card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.streak-card p {
+  font-size: 16px;
+  color: #444;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #ff6600;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #e65c00;
+}
+
+/* Cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 16px;
+  color: #555;
+}
+
+.card a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+}

@@ -31,6 +31,14 @@ export class SessionService {
     }
   }
 
+  public saveStreak(streak: number): void {
+    try {
+      sessionStorage.setItem('streak', streak.toString());
+    } catch (error) {
+      console.error('Error saving streak:', error);
+    }
+  }
+
   public getemail(): string| null{
     return sessionStorage.getItem('email');
   }
@@ -39,6 +47,10 @@ export class SessionService {
   }
   public gettoken(): string| null{
     return sessionStorage.getItem('token');
+  }
+
+  public getStreak(): string | null {
+    return sessionStorage.getItem('streak');
   }
 
   public deleteSessions(): void{

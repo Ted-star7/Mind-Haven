@@ -10,42 +10,47 @@ body {
 /* Main wrapper - Ensures full height */
 .wrap {
   display: flex;
-  height: 100vh;
+  height: 100vh; 
   width: 100vw;
-  /* Ensure full width */
+  transition: margin-left 0.3s ease-in-out;
 }
 
 /* Sidebar styling */
 app-sidebar {
   width: 250px;
-  /* Sidebar width */
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   background-color: #f2eed8;
-  /* Adjust theme */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  /* Ensure it stays on top */
+  transition: transform 0.3s ease-in-out;
 }
 
 /* Main content area */
 .outlet {
   flex-grow: 1;
-  /* Takes full available space */
   margin-left: 250px;
-  /* Adjust based on sidebar */
-  /* padding: 20px; */
-  width: calc(100vw - 250px);
-  /* Adjust width minus sidebar */
+  /* width: calc(100vw - 250px); */
   height: 100vh;
   overflow-y: auto;
-  /* background-color: #f2f2f2; */
+  transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
 }
 
 /* When sidebar is hidden */
-.hide-sidebar .outlet {
+.wrap.hide-sidebar app-sidebar {
+  transform: translateX(-100%);
+}
+
+.wrap.hide-sidebar .outlet {
   margin-left: 0;
   width: 100vw;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+  .wrap {
+    flex-direction: column;
+  }
 }
