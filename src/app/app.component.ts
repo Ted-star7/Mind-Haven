@@ -11,19 +11,27 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Mind-Haven';
   hideSidebar = false;
 
-  constructor(private router: Router) { }
-
-
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const currentRoute = event.urlAfterRedirects;
-        this.hideSidebar = currentRoute === '/' || currentRoute === '/resetpassword' || currentRoute === '/therapy-centre' || currentRoute === '/therapy' || currentRoute === '/contact' || currentRoute === '/home' || currentRoute === '/signup';
+        this.hideSidebar = [
+          '/',
+          '/resetpassword',
+          '/therapy-centre',
+          '/therapy',
+          '/contact',
+          '/home',
+          '/signup',
+        ].includes(currentRoute);
+
+        console.log('Current Route:', currentRoute, 'Sidebar Hidden:', this.hideSidebar);
       }
     });
   }

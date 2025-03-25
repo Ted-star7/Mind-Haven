@@ -87,8 +87,13 @@ export class ArticlesComponent implements OnInit {
   }
 
   openArticle(url: string): void {
-    window.open(url, '_blank');
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      console.error('Article URL is missing');
+    }
   }
+
 
   get paginatedArticles(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;

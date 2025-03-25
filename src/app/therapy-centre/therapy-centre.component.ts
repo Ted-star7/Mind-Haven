@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import * as mapboxgl from 'mapbox-gl';
 import { ServicesService } from '../services/consume.service';
+import { MapboxService } from '../services/mapbox.service';
+import * as mapboxgl from 'mapbox-gl';
 
 interface Hospital {
   name: string;
   latitude: number;
   longitude: number;
   vicinity: string;
-  rating: number;
+  rating?: number;
   photos?: string[];
-  icon: string;
+  icon?: string;
 }
 
 @Component({
@@ -19,204 +20,241 @@ interface Hospital {
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './therapy-centre.component.html',
-  styleUrls: ['./therapy-centre.component.css'],
+  styleUrls: ['./therapy-centre.component.css']
 })
-export class TherapyCentreComponent implements OnInit {
+export class TherapyCentreComponent implements OnInit, AfterViewInit, OnDestroy {
   hospitals: Hospital[] = [];
-  map?: mapboxgl.Map;
-  readonly latitude = -1.2921; // Default Nairobi latitude
-  readonly longitude = 36.8219; // Default Nairobi longitude
-  radius: number = 5000; // 5km radius
-  readonly mapboxToken = 'pk.eyJ1IjoiYmlndGVkIiwiYSI6ImNtNDhnZW52cTBscHQyanNvYnQ2OGF5bmgifQ.F7Ujx1zVTzQWL3AdImiF5A';
+  map: mapboxgl.Map | null = null;
+  userLocation: { lat: number; lng: number } | null = null;
+  locationQuery: string = '';
+  readonly defaultLocation = { lat: -1.2921, lng: 36.8219 };
+  radius: number = 5000;
 
-  transportMode: string = 'driving';
-  travelMode: string = 'driving'; // Default travel mode
-  startPoint?: mapboxgl.LngLat; // Starting point
-  endPoint?: mapboxgl.LngLat; // Destination point
-  distance?: number; // Distance in kilometers
-  duration?: number; // Duration in minutes
-  loading: boolean = false; // Loading state
-  startPointName: string = ''; // Name for the start point
-  endPointName: string = ''; // Name for the end point
+  loading: boolean = false;
+  error: string | null = null;
+  showDirections: boolean = false;
+  private mapInitialized = false;
 
-  constructor(private serviceService: ServicesService) { }
+  constructor(
+    private serviceService: ServicesService,
+    private mapboxService: MapboxService
+  ) { }
 
   ngOnInit(): void {
-    this.initializeMap();
-    this.fetchHospitals();
+    this.getUserLocation();
   }
 
-  fetchHospitals(): void {
-    this.loading = true; // Start loading
-    this.serviceService
-      .getTherapistsNearby(this.latitude, this.longitude, this.radius)
-      .subscribe(
-        (response: any) => {
-          this.loading = false; // Stop loading
-          if (Array.isArray(response)) {
-            this.hospitals = response.map((hospitalData: any) => ({
-              ...hospitalData,
-              latitude: hospitalData.latitude ?? this.latitude,
-              longitude: hospitalData.longitude ?? this.longitude,
-              icon: hospitalData.icon || 'assets/signup.jpg',
-            }));
-            this.addHospitalMarkers();
-          } else {
-            console.error('Invalid hospital data format:', response);
-            this.hospitals = [];
-          }
-        },
-        (error) => {
-          this.loading = false; // Stop loading
-          console.error('Error fetching therapists:', error);
-          this.hospitals = [];
-        }
-      );
+  ngAfterViewInit(): void {
+    this.initializeMap();
+  }
+
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+  }
+
+  private withMap(callback: (map: mapboxgl.Map) => void): void {
+    if (this.mapInitialized && this.map) {
+      try {
+        callback(this.map);
+      } catch (error) {
+        console.error('Map operation error:', error);
+        this.error = 'Error interacting with map. Please try again.';
+      }
+    } else {
+      console.warn('Map operation attempted before initialization');
+    }
   }
 
   initializeMap(): void {
-    this.map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [this.longitude, this.latitude],
-      zoom: 12,
-      accessToken: this.mapboxToken,
-    });
+    try {
+      this.map = this.mapboxService.createMap('map', {
+        center: [this.defaultLocation.lng, this.defaultLocation.lat],
+        zoom: 12
+      });
 
-    // Add click event for setting points
-    this.map.on('click', (event) => this.handleMapClick(event));
+      this.map.on('load', () => {
+        this.mapInitialized = true;
+        if (this.map) {
+          this.map.addControl(this.mapboxService.getNavigationControl());
+        }
+
+        if (this.hospitals.length > 0) {
+          this.addHospitalMarkers();
+        }
+      });
+
+      this.map.on('error', (e: any) => {
+        console.error('Map error:', e.error);
+        this.error = 'Map loading error. Please refresh the page.';
+      });
+
+    } catch (error) {
+      console.error('Map initialization error:', error);
+      this.error = 'Failed to initialize map. Please try again later.';
+    }
+  }
+
+  getUserLocation(): void {
+    if (navigator.geolocation) {
+      this.loading = true;
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          this.fetchHospitals(this.userLocation.lat, this.userLocation.lng);
+          this.centerMap(this.userLocation.lng, this.userLocation.lat);
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          this.fetchHospitals(this.defaultLocation.lat, this.defaultLocation.lng);
+          this.centerMap(this.defaultLocation.lng, this.defaultLocation.lat);
+          this.loading = false;
+        }
+      );
+    } else {
+      console.warn('Geolocation not supported');
+      this.fetchHospitals(this.defaultLocation.lat, this.defaultLocation.lng);
+      this.centerMap(this.defaultLocation.lng, this.defaultLocation.lat);
+    }
+  }
+
+  searchHospitals(): void {
+    if (!this.locationQuery.trim()) return;
+
+    this.loading = true;
+    this.error = null;
+
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(this.locationQuery)}.json?access_token=${this.mapboxService.getAccessToken()}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.features && data.features.length > 0) {
+          const [lng, lat] = data.features[0].center;
+          this.fetchHospitals(lat, lng);
+          this.centerMap(lng, lat);
+        } else {
+          this.error = 'Location not found. Using default location.';
+          this.fetchHospitals(this.defaultLocation.lat, this.defaultLocation.lng);
+          this.centerMap(this.defaultLocation.lng, this.defaultLocation.lat);
+        }
+        this.loading = false;
+      })
+      .catch(err => {
+        console.error('Geocoding error:', err);
+        this.error = 'Error searching location. Using default location.';
+        this.fetchHospitals(this.defaultLocation.lat, this.defaultLocation.lng);
+        this.centerMap(this.defaultLocation.lng, this.defaultLocation.lat);
+        this.loading = false;
+      });
+  }
+
+  fetchHospitals(lat: number, lng: number): void {
+    this.loading = true;
+    this.serviceService.getTherapistsNearby(lat, lng, this.radius)
+      .subscribe({
+        next: (response: any) => {
+          this.hospitals = Array.isArray(response)
+            ? response.map(h => ({
+              ...h,
+              latitude: h.latitude ?? lat,
+              longitude: h.longitude ?? lng,
+              rating: h.rating ?? 0,
+              icon: h.icon || 'assets/hospital-icon.png'
+            }))
+            : [];
+          this.addHospitalMarkers();
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching hospitals:', err);
+          this.error = 'Failed to load hospitals. Using default locations.';
+          this.loading = false;
+          this.hospitals = this.getDefaultHospitals();
+          this.addHospitalMarkers();
+        }
+      });
+  }
+
+  centerMap(lng: number, lat: number): void {
+    this.withMap(map => {
+      map.flyTo({
+        center: [lng, lat],
+        essential: true
+      });
+    });
   }
 
   addHospitalMarkers(): void {
-    if (!this.map || this.hospitals.length === 0) {
-      console.warn('No map or hospitals to display markers for');
-      return;
-    }
+    this.withMap(map => {
+      // Clear existing markers
+      document.querySelectorAll('.mapboxgl-marker').forEach(marker => marker.remove());
 
-    // Clear existing markers
-    const markers = document.getElementsByClassName('hospital-marker');
-    while (markers[0]) {
-      markers[0].parentNode?.removeChild(markers[0]);
-    }
+      this.hospitals.forEach(hospital => {
+        const el = document.createElement('div');
+        el.className = 'hospital-marker';
+        el.innerHTML = '<i class="fas fa-hospital"></i>';
 
-    this.hospitals.forEach((hospital) => {
-      const el = document.createElement('div');
-      el.className = 'hospital-marker';
-      el.style.backgroundImage = `url(${hospital.icon})`;
-      el.style.width = '30px';
-      el.style.height = '30px';
-      el.style.backgroundSize = 'contain';
+        const popup = this.mapboxService.createPopup({ offset: 25 })
+          .setHTML(`
+            <h3>${hospital.name}</h3>
+            <p>${hospital.vicinity}</p>
+            ${hospital.rating ? `<p>Rating: ${this.getStarRating(hospital.rating)}</p>` : ''}
+          `);
 
-      new mapboxgl.Marker(el)
-        .setLngLat([hospital.longitude, hospital.latitude])
-        .setPopup(
-          new mapboxgl.Popup().setHTML(
-            `<h3>${hospital.name}</h3>
-             <p>${hospital.vicinity}</p>
-             <p>Rating: ${hospital.rating ?? 'Not available'}</p>`
-          )
-        )
-        .addTo(this.map!);
+        this.mapboxService.createMarker(el)
+          .setLngLat([hospital.longitude, hospital.latitude])
+          .setPopup(popup)
+          .addTo(map);
+      });
     });
   }
 
-  handleMapClick(event: mapboxgl.MapMouseEvent): void {
-    const coords = event.lngLat;
-
-    if (!this.startPoint) {
-      this.startPoint = coords; // Set as starting point
-      this.startPointName = 'Start Point'; // You can change this as needed
-      new mapboxgl.Marker({ color: 'green' })
-        .setLngLat(coords)
-        .addTo(this.map!);
-    } else if (!this.endPoint) {
-      this.endPoint = coords; // Set as destination point
-      this.endPointName = 'End Point'; // You can change this as needed
-      new mapboxgl.Marker({ color: 'red' })
-        .setLngLat(coords)
-        .addTo(this.map!);
-      this.calculateRoute(); // Calculate route when both points are set
-    }
+  getDefaultHospitals(): Hospital[] {
+    return [
+      {
+        name: 'Nairobi Mental Health Hospital',
+        latitude: -1.2921,
+        longitude: 36.8219,
+        vicinity: 'Nairobi, Kenya',
+        rating: 4.5,
+        icon: 'assets/hospital-icon.png'
+      },
+      {
+        name: 'Chiromo Lane Medical Centre',
+        latitude: -1.2684,
+        longitude: 36.8033,
+        vicinity: 'Westlands, Nairobi',
+        rating: 4.2,
+        icon: 'assets/hospital-icon.png'
+      }
+    ];
   }
 
-  calculateRoute(): void {
-    if (!this.startPoint || !this.endPoint) return;
+  getStarRating(rating: number): string {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = 5 - fullStars - halfStar;
 
-    const routeUrl = `https://api.mapbox.com/directions/v5/mapbox/${this.transportMode}/${this.startPoint.lng},${this.startPoint.lat};${this.endPoint.lng},${this.endPoint.lat}?geometries=geojson&access_token=${this.mapboxToken}`;
-
-    fetch(routeUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        if (this.map && data.routes && data.routes.length > 0) {
-          const route = data.routes[0];
-          const coordinates = route.geometry.coordinates;
-
-          this.distance = parseFloat((route.distance / 1000).toFixed(2)); // Distance in km
-          this.duration = Math.round(route.duration / 60); // Duration in minutes
-
-          const routeGeoJSON: GeoJSON.FeatureCollection = {
-            type: 'FeatureCollection',
-            features: [{
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                coordinates,
-              },
-            }],
-          };
-
-          // If source already exists, update the data, otherwise add a new source
-          if (this.map.getSource('route')) {
-            (this.map.getSource('route') as mapboxgl.GeoJSONSource).setData(routeGeoJSON);
-          } else {
-            this.map.addSource('route', {
-              type: 'geojson',
-              data: routeGeoJSON
-            });
-            this.map.addLayer({
-              id: 'route',
-              type: 'line',
-              source: 'route',
-              layout: {
-                'line-join': 'round',
-                'line-cap': 'round',
-              },
-              paint: {
-                'line-color': '#007cbf',
-                'line-width': 4,
-              },
-            });
-          }
-        }
-      })
-      .catch((error) => console.error('Error fetching route:', error));
+    return '★'.repeat(fullStars) +
+      (halfStar ? '½' : '') +
+      '☆'.repeat(emptyStars);
   }
 
-
-
-  changeTravelMode(mode: string): void {
-    this.travelMode = mode;
-    if (this.startPoint && this.endPoint) {
-      this.calculateRoute(); // Recalculate route when travel mode changes
-    }
+  toggleDirections(): void {
+    this.showDirections = !this.showDirections;
   }
 
-  searchPlaces(query: string): void {
-    console.log('Searching for places:', query);
-    // Implement your search logic here (e.g., API call or filtering)
+  getRatingArray(rating: number | undefined): number[] {
+    return Array(Math.round(rating || 0)).fill(0);
+  }
+ 
+
+  closeDirections() {
+    this.showDirections = false;
   }
 
-  // Adding missing methods and properties to resolve errors
-  onLocationInputChange(event: any): void {
-    console.log('Location input changed', event);
-  }
-
-  setTransportMode(mode: string): void {
-    this.travelMode = mode;
-  }
-
-  getRatingArray(rating: number): number[] {
-    return Array(Math.round(rating)); // Generates an array to show stars for rating
-  }
 }

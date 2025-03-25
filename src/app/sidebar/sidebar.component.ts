@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';  // Import CommonModule
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule], // Add CommonModule
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
@@ -24,7 +24,10 @@ export class SidebarComponent implements OnInit {
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+    // Lock body scroll when sidebar is open
     document.body.style.overflow = this.isSidebarOpen ? 'hidden' : '';
+    // Force reflow for smoother animation
+    document.body.clientWidth;
   }
 
   closeSidebar(): void {
@@ -39,6 +42,7 @@ export class SidebarComponent implements OnInit {
   }
 
   private checkScreenSize(): void {
+    // Always show sidebar on larger screens
     if (window.innerWidth > 768) {
       this.isSidebarOpen = true;
     } else {

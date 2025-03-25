@@ -11,18 +11,24 @@
   top: 0;
   z-index: 100;
   transition: transform 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
+/* Sidebar Header */
 .sidebar-header {
   padding: 20px;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header h2 {
   margin: 0;
   font-size: 1.5rem;
   color: #ffb400;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 /* Menu Items */
@@ -30,6 +36,17 @@
   flex: 1;
   padding: 15px 0;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 180, 0, 0.5) transparent;
+}
+
+.menu-items::-webkit-scrollbar {
+  width: 5px;
+}
+
+.menu-items::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 180, 0, 0.5);
+  border-radius: 10px;
 }
 
 .menu-items a {
@@ -39,6 +56,8 @@
   color: white;
   text-decoration: none;
   transition: all 0.2s;
+  margin: 5px 10px;
+  border-radius: 5px;
 }
 
 .menu-items a i {
@@ -46,18 +65,30 @@
   margin-right: 12px;
   text-align: center;
   color: #ffb400;
+  font-size: 1.1rem;
+}
+
+.menu-items a span {
+  font-size: 0.95rem;
+  font-weight: 400;
 }
 
 .menu-items a:hover {
   background: rgba(255, 180, 0, 0.1);
+  transform: translateX(5px);
 }
 
 .menu-items a.active {
   background: rgba(255, 180, 0, 0.2);
   border-left: 3px solid #ffb400;
+  font-weight: 500;
 }
 
-/* User Profile */
+/* User Profile Section */
+.bottom-section {
+  margin-top: auto;
+}
+
 .user-profile {
   display: flex;
   align-items: center;
@@ -74,10 +105,10 @@
 
 .profile-info {
   flex: 1;
+  overflow: hidden;
 }
 
 .username {
-  
   font-weight: 500;
   font-size: 0.9rem;
   white-space: nowrap;
@@ -90,19 +121,33 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Logout Button */
 .logout {
-  color: orange;
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
   transition: all 0.2s;
+  margin: 10px;
+  border-radius: 5px;
+  background: rgba(255, 180, 0, 0.1);
+}
+
+.logout i {
+  width: 24px;
+  margin-right: 12px;
+  text-align: center;
+  color: #ffb400;
+  font-size: 1.1rem;
 }
 
 .logout:hover {
-  color: white;
-  transform: scale(1.1);
+  background: rgba(255, 180, 0, 0.2);
+  color: #ffb400;
 }
 
-
-/* Mobile Toggle */
+/* Mobile Toggle Button */
 .menu-toggle {
   display: none;
   position: fixed;
@@ -115,23 +160,40 @@
   border-radius: 4px;
   z-index: 101;
   cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.menu-toggle:hover {
+  background: #3a1a7a;
+  transform: scale(1.05);
 }
 
 /* Overlay */
 .overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
 }
 
-/* Responsive */
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
+    width: 280px;
+    /* Slightly wider for better mobile experience */
   }
 
   .sidebar.active {
@@ -141,16 +203,95 @@
   .menu-toggle {
     display: block;
   }
+
+  .overlay.active {
+    display: block;
+  }
 }
 
-/* App Component Adjustments */
-.main-content {
-  margin-left: 250px;
-  transition: margin-left 0.3s;
+/* Animation for sidebar items */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
+.menu-items a {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* Delay animations for each menu item */
+.menu-items a:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.menu-items a:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.menu-items a:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.menu-items a:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.menu-items a:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.menu-items a:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* Mobile Toggle Button - Make sure this is at the end of your CSS */
+.menu-toggle {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 1.5rem;
+  color: white;
+  background: #2b1055;
+  padding: 8px 12px;
+  border-radius: 4px;
+  z-index: 101;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.menu-toggle:hover {
+  background: #3a1a7a;
+  transform: scale(1.05);
+}
+
+/* Make sure this media query is properly implemented */
 @media (max-width: 768px) {
-  .main-content {
-    margin-left: 0;
+  .menu-toggle {
+    display: block;
+    /* Show on mobile */
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
   }
 }
