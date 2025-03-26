@@ -75,14 +75,14 @@ export class SignupComponent {
       return;
     }
 
-    const passwordPattern = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-    if (!passwordPattern.test(this.signUpData.password)) {
-      this.showSnackbar(
-        'Password must have at least 8 characters, including one uppercase letter and one number.',
-        8000
-      );
-      return;
-    }
+    // const passwordPattern = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    // if (!passwordPattern.test(this.signUpData.password)) {
+    //   this.showSnackbar(
+    //     'Password must have at least 8 characters, including one uppercase letter and one number.',
+    //     8000
+    //   );
+    //   return;
+    // }
 
     if (this.signUpData.password !== this.signUpData.rePassword) {
       this.showSnackbar('Passwords do not match!', 5000);

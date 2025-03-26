@@ -1,18 +1,22 @@
 <div class="container">
   <!-- Back Button -->
-  <button class="back-button" (click)="navigateBack()">Back to Home</button>
+  <button class="back-button" (click)="navigateBack()">
+    <i class="fas fa-arrow-left"></i> Back to Home
+  </button>
 
   <!-- Left Section (Image and Welcome Message) -->
   <div class="left-section">
-    <h1>Welcome to</h1>
-    <h2>MindHaven</h2>
-    <img
-      src="/assets/signup.jpg"
-      alt="Person meditating in a peaceful environment"
-    />
-    <button class="toggle-button" (click)="toggleForm()">
-      {{ isSignIn ? "Sign Up" : "Sign In" }}
-    </button>
+    <div class="left-content">
+      <h1>Welcome to</h1>
+      <h2>MindHaven</h2>
+      <img
+        src="/assets/signup.jpg"
+        alt="Person meditating in a peaceful environment"
+      />
+      <button class="toggle-button" (click)="toggleForm()">
+        {{ isSignIn ? "Sign Up" : "Sign In" }}
+      </button>
+    </div>
   </div>
 
   <!-- Right Section (Forms) -->
@@ -24,50 +28,65 @@
         (ngSubmit)="onSubmitSignUp(signUpForm)"
         #signUpForm="ngForm"
       >
-        <h2>Create an Account</h2>
-        <input
-          type="text"
-          placeholder="Full Name"
-          [(ngModel)]="signUpData.fullName"
-          name="fullName"
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          [(ngModel)]="signUpData.email"
-          name="email"
-          required
-        />
+        <div class="form-header">
+          <h2>Create an Account</h2>
+          <p>Join our community today</p>
+        </div>
 
-        <!-- Password Field with Eye Icon -->
-        <div class="password-field">
+        <div class="input-group">
+          <input
+            type="text"
+            id="fullName"
+            placeholder=" "
+            [(ngModel)]="signUpData.fullName"
+            name="fullName"
+            required
+          />
+          <label for="fullName" class="input-label">Full Name</label>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="email"
+            id="email"
+            placeholder=" "
+            [(ngModel)]="signUpData.email"
+            name="email"
+            required
+          />
+          <label for="email" class="input-label">Email</label>
+        </div>
+
+        <div class="input-group password-field">
           <input
             [type]="passwordVisible ? 'text' : 'password'"
-            placeholder="Password"
+            id="password"
+            placeholder=" "
             [(ngModel)]="signUpData.password"
             name="password"
             required
           />
+          <label for="password" class="input-label">Password</label>
           <i
             (click)="togglePasswordVisibility()"
-            class="eye-icon fa"
+            class="eye-icon fas"
             [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
           ></i>
         </div>
 
-        <!-- Confirm Password Field with Eye Icon -->
-        <div class="password-field">
+        <div class="input-group password-field">
           <input
             [type]="passwordVisible ? 'text' : 'password'"
-            placeholder="Confirm Password"
+            id="confirmPassword"
+            placeholder=" "
             [(ngModel)]="signUpData.rePassword"
             name="rePassword"
             required
           />
+          <label for="confirmPassword" class="input-label">Confirm Password</label>
           <i
             (click)="togglePasswordVisibility()"
-            class="eye-icon fa"
+            class="eye-icon fas"
             [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
           ></i>
         </div>
@@ -82,12 +101,18 @@
           />
           <label for="terms"
             >I agree to the <a href="#">Terms of Service</a> and
-            <a href="#">Privacy Policy</a>.</label
+            <a href="#">Privacy Policy</a></label
           >
         </div>
-        <button type="submit" [disabled]="isLoading">Sign Up</button>
-        <!-- Loading Spinner Below Sign Up Button -->
-        <div *ngIf="isLoading" class="loading-spinner"></div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          Sign Up
+          <span *ngIf="isLoading" class="loading-spinner"></span>
+        </button>
+
+        <div class="form-footer">
+          <!-- Already have an account? <a href="" (click)="toggleForm()">Sign In</a> -->
+        </div>
       </form>
 
       <!-- Sign In Form -->
@@ -96,37 +121,49 @@
         (ngSubmit)="onSubmitSignIn(signInForm)"
         #signInForm="ngForm"
       >
-        <h2>Welcome Back</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          [(ngModel)]="signInData.email"
-          name="email"
-          required
-        />
+        <div class="form-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to continue your journey</p>
+        </div>
 
-        <!-- Password Field with Eye Icon -->
-        <div class="password-field">
+        <div class="input-group">
+          <input
+            type="email"
+            id="signinEmail"
+            placeholder=" "
+            [(ngModel)]="signInData.email"
+            name="email"
+            required
+          />
+          <label for="signinEmail" class="input-label">Email</label>
+        </div>
+
+        <div class="input-group password-field">
           <input
             [type]="passwordVisible ? 'text' : 'password'"
-            placeholder="Password"
+            id="signinPassword"
+            placeholder=" "
             [(ngModel)]="signInData.password"
             name="password"
             required
           />
+          <label for="signinPassword" class="input-label">Password</label>
           <i
             (click)="togglePasswordVisibility()"
-            class="eye-icon fa"
+            class="eye-icon fas"
             [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
           ></i>
         </div>
-        <button type="submit" [disabled]="isLoading">Sign In</button>
-        <!-- Loading Spinner Below Sign In Button -->
-        <div *ngIf="isLoading" class="loading-spinner"></div>
-        <br />
-        <br />
 
-        <a href="/resetpassword"> Forgot Password?</a>
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          Sign In
+          <span *ngIf="isLoading" class="loading-spinner"></span>
+        </button>
+
+        <div class="form-footer">
+          <a href="/resetpassword">Forgot Password?</a><br>
+          <!-- Don't have an account? <a href="" (click)="toggleForm()">Sign Up</a> -->
+        </div>
       </form>
     </div>
   </div>

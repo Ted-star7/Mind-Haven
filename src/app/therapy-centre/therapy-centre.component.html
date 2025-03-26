@@ -50,7 +50,7 @@
     <div class="feature">
       <i class="fas fa-star"></i>
       <h2>Review Services</h2>
-      <p>Leave a review of the services provided at your selected medical centre.</p>
+      <p>Provides a review of the services provided at your selected medical centre.</p>
     </div>
   </section>
 
@@ -86,7 +86,7 @@
         <div *ngFor="let hospital of hospitals" class="hospital-card">
           <div class="hospital-image">
             <img
-              [src]="hospital.photos?.[0] || 'assets/hospital-placeholder.jpg'"
+              [src]="hospital.photos?.[0] || 'assets/doc1.jpg'"
               alt="{{ hospital.name }}"
             />
           </div>
@@ -100,7 +100,7 @@
               <span>({{ hospital.rating?.toFixed(1) || "N/A" }})</span>
             </div>
             <p class="address">{{ hospital.vicinity }}</p>
-            <button class="view-button">View Details</button>
+            <!-- <button class="view-button">View Details</button> -->
           </div>
         </div>
       </div>
