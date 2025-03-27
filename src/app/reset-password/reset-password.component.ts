@@ -22,15 +22,21 @@ export class ResetPasswordComponent implements OnInit {
   step: number = 1; // 1 for email input, 2 for OTP and new password input
   otpTimer: number = 60; // Countdown in seconds
   otpResendDisabled: boolean = true;
+  showPassword: boolean = false; // Added for password visibility toggle
 
   constructor(
     private router: Router,
     private serviceService: ServicesService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.startOtpTimer();
+  }
+
+  // Toggle password visibility
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   // Show a snackbar message
@@ -55,15 +61,18 @@ export class ResetPasswordComponent implements OnInit {
   // Handle email submission
   onEmailSubmit(): void {
     if (this.email) {
+      this.isLoading = true;
       this.serviceService
         .postRequest('/api/open/auth/reset-password/request', { email: this.email }, null)
         .subscribe(
           () => {
+            this.isLoading = false;
             this.showSnackbar('OTP has been sent to your email.');
             this.step = 2; // Slide to the next form
             this.startOtpTimer(); // Restart the OTP timer
           },
           (error) => {
+            this.isLoading = false;
             this.showSnackbar('Failed to send OTP. Please try again.');
             console.error('OTP request error:', error);
           }
@@ -74,14 +83,17 @@ export class ResetPasswordComponent implements OnInit {
   // Handle OTP resend
   onResendOtp(): void {
     if (!this.otpResendDisabled) {
+      this.isLoading = true;
       this.serviceService
         .postRequest('/api/open/auth/resend-otp', { email: this.email }, null)
         .subscribe(
           () => {
+            this.isLoading = false;
             this.showSnackbar('OTP resent successfully.');
             this.startOtpTimer();
           },
           (error) => {
+            this.isLoading = false;
             this.showSnackbar('Failed to resend OTP. Please try again.');
             console.error('OTP resend error:', error);
           }
@@ -100,11 +112,11 @@ export class ResetPasswordComponent implements OnInit {
       };
 
       this.serviceService.postRequest('/api/open/auth/reset-password/confirm', resetData, null)
-      .subscribe(
+        .subscribe(
           () => {
             this.isLoading = false;
             this.showSnackbar('Password reset successful! Redirecting to login...');
-            setTimeout(() => this.router.navigate(['/login']), 3000);
+            setTimeout(() => this.router.navigate(['/signup']), 3000);
           },
           (error) => {
             this.isLoading = false;
@@ -113,7 +125,7 @@ export class ResetPasswordComponent implements OnInit {
           }
         );
     } else {
-      this.showSnackbar('Please ensure all fields are correctly filled.');
+      this.showSnackbar('Please ensure all fields are correctly filled and passwords match.');
     }
   }
 
