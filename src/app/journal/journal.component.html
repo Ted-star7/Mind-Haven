@@ -12,8 +12,10 @@
     <div *ngIf="saveError" class="alert error">
         Please select a mood and make sure you're logged in.
     </div>
-    <div *ngIf="loading" class="alert loading">
-        Loading...
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoadingEntries || isSavingEntry || loading" class="loading-spinner">
+        <div class="spinner"></div>
     </div>
 
     <!-- Journaling Information Section -->
@@ -53,7 +55,10 @@
                type="text" 
                [(ngModel)]="tags"
                placeholder="Add tags (e.g., Family, Health, Work)...">
-        <button class="save-button" (click)="saveJournalEntry()">Save Entry</button>
+        <button class="save-button" (click)="saveJournalEntry()" [disabled]="isSavingEntry">
+            <span *ngIf="!isSavingEntry">Save Entry</span>
+            <span *ngIf="isSavingEntry">Saving...</span>
+        </button>
     </div>
 
     <!-- Scientific Backing -->
@@ -66,7 +71,10 @@
     <!-- Past Entries -->
     <div class="card entries">
         <h2>Past Journal Entries</h2>
-        <div *ngIf="pastEntries.length === 0" class="no-entries">
+        <div *ngIf="isLoadingEntries" class="loading-entries">
+            Loading your past entries...
+        </div>
+        <div *ngIf="!isLoadingEntries && pastEntries.length === 0" class="no-entries">
             No entries yet. Start by adding your first journal entry above.
         </div>
         <div *ngFor="let entry of pastEntries" class="entry">
@@ -80,7 +88,10 @@
             <div class="tags" *ngIf="entry.tags">
                 <span *ngFor="let tag of entry.tags.split(',')">{{ tag.trim() }}</span>
             </div>
-            <button class="delete-button" (click)="deleteEntry(entry.id)">Delete</button>
+            <button class="delete-button" (click)="deleteEntry(entry.id)" [disabled]="loading">
+                <span *ngIf="!loading">Delete</span>
+                <span *ngIf="loading">Deleting...</span>
+            </button>
         </div>
     </div>
 </div>

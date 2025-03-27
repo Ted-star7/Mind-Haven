@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core'; 
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 export class ServicesService {
   private url: string = 'https://mindhaven.onrender.com';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   // POST request with JSON data
   public postRequest(endpoint: string, data: any, token: string | null): Observable<any> {
@@ -20,63 +19,76 @@ export class ServicesService {
       .pipe(catchError(this.handleError));
   }
 
-  public getTherapistsNearby(latitude: number, longitude: number, radius: number): Observable<any> {
-    const endpoint = `/api/open/therapists/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
-    return this.httpClient.get(`${this.url}${endpoint}`).pipe(catchError(this.handleError));
-  }
-
-
-
-  // POST Request for File Upload (e.g., property images)
-  public postFormData(endpoint: string, formData: any): Observable<any> {
-    return this.httpClient.post(`${this.url}${endpoint}`, formData)
-      .pipe(catchError(this.handleError));
-  }
-
+  // GET request without token
   public getRequest(endpoint: string): Observable<any> {
     console.log(`Making GET request to: ${this.url}${endpoint}`);
     return this.httpClient.get(`${this.url}${endpoint}`)
-      .pipe(
-        catchError(this.handleError),
-        
-      );
+      .pipe(catchError(this.handleError));
   }
 
+  // GET request with token
+  public getMethod(endpoint: string, token: string | null): Observable<any> {
+    console.log(`Making authenticated GET request to: ${this.url}${endpoint}`);
+    const headers = this.createHeaders(token);
+    return this.httpClient.get(`${this.url}${endpoint}`, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  // DELETE request with token
   public deleteRequest(endpoint: string, token: string | null): Observable<any> {
     const headers = this.createHeaders(token);
     return this.httpClient.delete(`${this.url}${endpoint}`, { headers })
       .pipe(catchError(this.handleError));
   }
+
+  // POST Request for File Upload (e.g., property images)
+  public postFormData(endpoint: string, formData: FormData, token: string | null): Observable<any> {
+    const headers = this.createHeaders(token, true);
+    return this.httpClient.post(`${this.url}${endpoint}`, formData, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Get therapists nearby (public endpoint)
+  public getTherapistsNearby(latitude: number, longitude: number, radius: number): Observable<any> {
+    const endpoint = `/api/open/therapists/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
+    return this.httpClient.get(`${this.url}${endpoint}`)
+      .pipe(catchError(this.handleError));
+  }
+
   // Create headers method
-private createHeaders(token: string | null, isFormData: boolean = false): HttpHeaders {
-  let headers = new HttpHeaders({
-    'ngrok-skip-browser-warning': '6024',  // Optional custom header
-  });
+  private createHeaders(token: string | null, isFormData: boolean = false): HttpHeaders {
+    let headers = new HttpHeaders();
 
-  if (token) {
-    headers = headers.set('Authorization', `Bearer ${token}`);
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    if (!isFormData) {
+      headers = headers.set('Content-Type', 'application/json');
+    }
+
+    // Add any custom headers here
+    headers = headers.set('ngrok-skip-browser-warning', '6024');
+
+    return headers;
   }
 
-  // Do not set 'Content-Type' for FormData, as the browser handles it
-  if (!isFormData) {
-    headers = headers.set('Content-Type', 'application/json');
-  }
-
-  return headers;
-}
-
-
-  // Handle errors
+  // Improved error handling
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
+
     if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
+      // Client-side error
+      errorMessage = `Client error: ${error.error.message}`;
+    } else if (error.error?.message) {
+      // Server-side error with message
+      errorMessage = error.error.message;
     } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      // Generic server-side error
+      errorMessage = `Server error: ${error.status} - ${error.statusText || 'Unknown error'}`;
     }
+
+    console.error('API Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }
-
-
-

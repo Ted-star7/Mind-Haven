@@ -18,7 +18,9 @@ export class JournalComponent implements OnInit {
   pastEntries: any[] = [];
   loading: boolean = false;
   saveSuccess: boolean = false;
-  saveError: boolean = false;
+  saveError: string | null = null;
+  isLoadingEntries: boolean = false;
+  isSavingEntry: boolean = false;
 
   moods = [
     { emoji: '😊', label: 'Happy', description: 'Feeling joyful and content' },
@@ -38,7 +40,7 @@ export class JournalComponent implements OnInit {
 
   getMoodEmoji(moodLabel: string): string {
     const mood = this.moods.find(m => m.label === moodLabel);
-    return mood ? mood.emoji : '❓'; // Returns the emoji if found, or a question mark if not
+    return mood ? mood.emoji : '❓';
   }
 
   selectMood(mood: string): void {
@@ -47,59 +49,97 @@ export class JournalComponent implements OnInit {
 
   loadPastEntries(): void {
     const userId = this.sessionService.getid();
-    if (!userId) return;
+    const token = this.sessionService.gettoken();
 
-    this.loading = true;
-    this.servicesService.getRequest(`/api/mood-logger/logs/${userId}`)
+    if (!userId) {
+      this.saveError = 'User ID not found. Please log in again.';
+      setTimeout(() => this.saveError = null, 3000);
+      return;
+    }
+
+    if (!token) {
+      this.saveError = 'Authentication token not found. Please log in again.';
+      setTimeout(() => this.saveError = null, 3000);
+      return;
+    }
+
+    this.isLoadingEntries = true;
+    this.servicesService.getMethod(`/api/mood-logger/logs/${userId}`, token)
       .subscribe({
         next: (entries) => {
           this.pastEntries = entries || [];
-          this.loading = false;
+          this.isLoadingEntries = false;
         },
         error: (error) => {
           console.error('Error loading past entries:', error);
-          this.loading = false;
+          this.saveError = 'Failed to load entries. Please try again.';
+          setTimeout(() => this.saveError = null, 3000);
+          this.isLoadingEntries = false;
         }
       });
   }
 
   saveJournalEntry(): void {
     const userId = this.sessionService.getid();
-    if (!userId || !this.selectedMood) {
-      this.saveError = true;
-      setTimeout(() => this.saveError = false, 3000);
+    const token = this.sessionService.gettoken();
+
+    if (!userId) {
+      this.saveError = 'User ID not found. Please log in again.';
+      setTimeout(() => this.saveError = null, 3000);
+      return;
+    }
+
+    if (!this.selectedMood) {
+      this.saveError = 'Please select a mood.';
+      setTimeout(() => this.saveError = null, 3000);
+      return;
+    }
+
+    if (!token) {
+      this.saveError = 'Authentication token not found. Please log in again.';
+      setTimeout(() => this.saveError = null, 3000);
       return;
     }
 
     const entryData = {
       mood: this.selectedMood,
       description: this.gratitudeEntry,
-      tags: this.tags
+      tag: this.tags // Note: API expects 'tag' not 'tags'
     };
 
-    this.loading = true;
-    this.servicesService.postRequest(`/api/mood-logger/new-log/${userId}`, entryData, this.sessionService.gettoken())
-      .subscribe({
-        next: (response) => {
-          this.pastEntries.unshift(response); // Add new entry at the beginning
-          this.resetForm();
-          this.loading = false;
-          this.saveSuccess = true;
-          setTimeout(() => this.saveSuccess = false, 3000);
-        },
-        error: (error) => {
-          console.error('Error saving journal entry:', error);
-          this.loading = false;
-          this.saveError = true;
-          setTimeout(() => this.saveError = false, 3000);
-        }
-      });
+    this.isSavingEntry = true;
+    this.servicesService.postRequest(
+      `/api/mood-logger/new-log/${userId}`,
+      entryData,
+      token
+    ).subscribe({
+      next: (response) => {
+        this.pastEntries.unshift(response);
+        this.resetForm();
+        this.isSavingEntry = false;
+        this.saveSuccess = true;
+        setTimeout(() => this.saveSuccess = false, 3000);
+      },
+      error: (error) => {
+        console.error('Error saving journal entry:', error);
+        this.saveError = error.error?.message || 'Failed to save entry. Please try again.';
+        setTimeout(() => this.saveError = null, 3000);
+        this.isSavingEntry = false;
+      }
+    });
   }
 
   deleteEntry(entryId: number): void {
+    const token = this.sessionService.gettoken();
+    if (!token) {
+      this.saveError = 'Authentication token not found. Please log in again.';
+      setTimeout(() => this.saveError = null, 3000);
+      return;
+    }
+
     if (confirm('Are you sure you want to delete this entry?')) {
       this.loading = true;
-      this.servicesService.deleteRequest(`/api/mood-logger/logs/${entryId}`, this.sessionService.gettoken())
+      this.servicesService.deleteRequest(`/api/mood-logger/logs/${entryId}`, token)
         .subscribe({
           next: () => {
             this.pastEntries = this.pastEntries.filter(entry => entry.id !== entryId);
@@ -107,6 +147,8 @@ export class JournalComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error deleting entry:', error);
+            this.saveError = 'Failed to delete entry. Please try again.';
+            setTimeout(() => this.saveError = null, 3000);
             this.loading = false;
           }
         });
