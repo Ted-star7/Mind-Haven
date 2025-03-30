@@ -1,45 +1,129 @@
 <!-- Main Content -->
+<div class="search-container">
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      placeholder="Search articles..." 
+      (keyup.enter)="searchArticles()"
+      class="search-input"
+    >
+    <button (click)="searchArticles()" class="search-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+      Search
+    </button>
+  </div>
+  <div *ngIf="searchQuery && filteredArticles.length > 0" class="search-results-info">
+    Showing {{filteredArticles.length}} results for "{{searchQuery}}"
+  </div>
+  <div *ngIf="searchQuery && filteredArticles.length === 0 && !loading" class="no-results">
+    No results found for "{{searchQuery}}"
+  </div>
+</div>
+
 <main>
-    <!-- Left Column -->
-    <div class="left-column">
-        <!-- Featured Article -->
-        <div *ngIf="!loading && featuredArticles.length > 0" class="featured-article">
-            <img [src]="featuredArticles[0].image || 'https://placehold.co/600x300'" alt="Featured article">
-            <h2>{{featuredArticles[0].title}}</h2>
-            <p>{{featuredArticles[0].description}}</p>
-            <div class="author">
-                <img [src]="featuredArticles[0].authorImage || 'https://placehold.co/50x50'" alt="Author">
-                <div>
-                    <p>{{featuredArticles[0].author || 'Unknown Author'}}</p>
-                    <p>{{featuredArticles[0].publishedAt | date}}</p>
-                </div>
-            </div>
-            <button (click)="openArticle(featuredArticles[0].url)">Read More</button>
-        </div>
-
-        <!-- Articles Grid -->
-        <div *ngIf="!loading" class="articles-grid">
-            <div *ngFor="let article of articles" class="article-card">
-                <img [src]="article.image || 'https://placehold.co/300x200'" alt="Article Image">
-                <h3>{{article.title}}</h3>
-                <p>{{article.description}}</p>
-               <button (click)="openArticle(article.url)">Read More</button>
-
-            </div>
-        </div>
+  <!-- Left Column -->
+  <div class="left-column">
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <p>Loading articles...</p>
     </div>
 
-    <!-- Right Column -->
-    <div class="right-column">
-        <div class="sidebar-articles">
-            <h3>Recent Articles</h3>
-            <div *ngFor="let article of recentArticles" class="sidebar-article">
-                <img [src]="article.image || 'https://placehold.co/80x80'" alt="Article Image">
-                <div>
-                    <h4>{{article.title}}</h4>
-                    <p>{{article.publishedAt | date}}</p>
-                </div>
-            </div>
+    <!-- Featured Article -->
+    <div *ngIf="!loading && featuredArticles.length > 0" class="featured-article">
+      <div class="featured-image-container">
+        <img 
+          [src]="featuredArticles[0].image || 'https://placehold.co/600x300'" 
+          alt="Featured article"
+          (error)="featuredArticles[0].image = 'https://placehold.co/600x300'"
+          class="featured-image"
+        >
+        <div class="featured-badge">Featured</div>
+      </div>
+      <div class="featured-content">
+        <h2>{{featuredArticles[0].title}}</h2>
+        <p class="featured-description">{{featuredArticles[0].description}}</p>
+        <div class="author">
+          <img 
+            [src]="featuredArticles[0].authorImage || 'https://placehold.co/50x50'" 
+            alt="Author"
+            (error)="featuredArticles[0].authorImage = 'https://placehold.co/50x50'"
+            class="author-image"
+          >
+          <div class="author-info">
+            <p class="author-name">{{featuredArticles[0].author || 'Unknown Author'}}</p>
+            <p class="publish-date">{{featuredArticles[0].publishedAt | date:'mediumDate'}}</p>
+          </div>
         </div>
+        <button (click)="openArticle(featuredArticles[0].url)" class="read-more-button">
+          Read More
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          </svg>
+        </button>
+      </div>
     </div>
+
+    <!-- Articles Grid -->
+    <div *ngIf="!loading" class="articles-grid">
+      <div *ngFor="let article of filteredArticles" class="article-card">
+        <div class="card-image-container">
+          <img 
+            [src]="article.image || 'https://placehold.co/300x200'" 
+            alt="Article Image"
+            (error)="article.image = 'https://placehold.co/300x200'"
+            class="card-image"
+          >
+        </div>
+        <div class="card-content">
+          <div class="card-meta">
+            <span class="category-tag" *ngIf="article.category">{{article.category}}</span>
+            <span class="publish-date">{{article.publishedAt | date:'shortDate'}}</span>
+          </div>
+          <h3>{{article.title}}</h3>
+          <!-- <p class="card-description">{{article.description | truncate:150}}</p> -->
+          <button (click)="openArticle(article.url)" class="read-more-button">
+            Read More
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1 && !loading" class="pagination">
+      <button 
+        *ngFor="let page of getPageNumbers()" 
+        (click)="changePage(page)"
+        [class.active]="currentPage === page"
+        class="page-button"
+      >
+        {{page}}
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column -->
+  <div class="right-column">
+    <div class="sidebar-articles">
+      <h3 class="sidebar-title">Recent Articles</h3>
+      <div *ngFor="let article of recentArticles" class="sidebar-article" (click)="openArticle(article.url)">
+        <img 
+          [src]="article.image || 'https://placehold.co/80x80'" 
+          alt="Article Image"
+          (error)="article.image = 'https://placehold.co/80x80'"
+          class="sidebar-image"
+        >
+        <div class="sidebar-content">
+          <!-- <h4>{{article.title | truncate:50}}</h4> -->
+          <p class="sidebar-date">{{article.publishedAt | date:'shortDate'}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
