@@ -83,7 +83,7 @@ export class ArticlesComponent implements OnInit {
       window.open(url, '_blank');
     } else {
       console.error('Article URL is missing');
-      // Optional: Show a user-friendly message
+     
     }
   }
 

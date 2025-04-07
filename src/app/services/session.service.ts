@@ -23,17 +23,18 @@ export class SessionService {
     }
   }
 
-  public saveId(id: string): void{
-    try{
-      sessionStorage.setItem('id', id);
-    }catch (error){
-      console.error('error saving userId:', error)
+  public saveUserId(userId: string): void {
+    try {
+      sessionStorage.setItem('userId', userId);
+    } catch (error) {
+      console.error('Error saving userId in session storage:', error);
     }
   }
 
-  public saveStreak(streak: number): void {
+  public saveStreak(streak: number | string): void {
     try {
-      sessionStorage.setItem('streak', streak.toString());
+      const streakValue = typeof streak === 'number' ? streak.toString() : streak;
+      sessionStorage.setItem('streak', streakValue);
     } catch (error) {
       console.error('Error saving streak:', error);
     }
@@ -42,9 +43,10 @@ export class SessionService {
   public getemail(): string| null{
     return sessionStorage.getItem('email');
   }
-  public getid(): string|null{
-    return sessionStorage.getItem('id');
+  public getUserId(): string | null {
+    return sessionStorage.getItem('userId');
   }
+
   public gettoken(): string| null{
     return sessionStorage.getItem('token');
   }
@@ -53,10 +55,16 @@ export class SessionService {
     return sessionStorage.getItem('streak');
   }
 
+  public getStreakNumber(): number {
+    const streak = this.getStreak();
+    return streak ? parseInt(streak, 10) : 0;
+  }
+
   public deleteSessions(): void{
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('token');
-    sessionStorage.removeItem('id');
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('streak')
   }
 
   public isLoggedIn(): boolean{

@@ -112,42 +112,55 @@ export class SignupComponent {
     );
   }
 
-onSubmitSignIn(form: NgForm): void {
-  if (form.invalid) {
-    this.showSnackbar('Please enter valid credentials.');
-    return;
-  }
-
-  this.isLoading = true;
-
-  const formData = {
-    email: this.signInData.email,
-    password: this.signInData.password,
-  };
-
-  this.serviceService.postRequest('/api/open/auth/login', formData, null).subscribe(
-    (response) => {
-      this.isLoading = false;
-      const { token, "user id": id, "user email": email } = response;
-
-      if (token && id) {
-        this.sessionService.saveToken(token);  
-        this.sessionService.saveEmail(email);  
-        this.sessionService.saveId(id);  
-
-        this.showSnackbar('Login successful!');
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.showSnackbar('Login failed: Invalid response from server.', 5000);
-      }
-    },
-    (error) => {
-      this.isLoading = false;
-      this.showSnackbar('Login failed. Please check your credentials.', 5000);
-      this.resetSignInForm();
+  onSubmitSignIn(form: NgForm): void {
+    if (form.invalid) {
+      this.showSnackbar('Please enter valid credentials.');
+      return;
     }
-  );
-}
+
+    this.isLoading = true;
+
+    const formData = {
+      email: this.signInData.email,
+      password: this.signInData.password,
+    };
+
+    this.serviceService.postRequest('/api/open/auth/login', formData, null).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        const { token, userId, email, streak } = response;
+
+        if (token && userId) {
+          // Save all session data first
+          this.sessionService.saveToken(token);
+          this.sessionService.saveEmail(email);
+          this.sessionService.saveUserId(userId);
+
+          // Ensure streak is properly saved as string
+          const streakValue = streak !== undefined ? streak.toString() : '0';
+          this.sessionService.saveStreak(streakValue);
+
+          // Verify in console
+          console.log('Saved to session:', {
+            token,
+            email,
+            userId,
+            streak: streakValue
+          });
+
+          this.showSnackbar('Login successful!');
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.showSnackbar('Login failed: Invalid response from server.', 5000);
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.showSnackbar('Login failed. Please check your credentials.', 5000);
+        this.resetSignInForm();
+      }
+    });
+  }
 
 
 

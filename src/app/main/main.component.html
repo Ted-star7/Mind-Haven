@@ -4,7 +4,8 @@
 
   <!-- Streak Section -->
   <div class="streak-card" [class.warning]="streakWarning">
-    <h2>🔥 Your Streak: {{streak}} Days</h2>
+    <h2 *ngIf="!loading">🔥 Your Streak: {{streak}} Days</h2>
+  <div *ngIf="loading" class="streak-loading">Loading your streak...</div>
     <p>{{getStreakMessage()}}</p>
     <a routerLink="/journal" class="cta-button">
       {{streak > 0 ? 'Continue Journaling' : 'Start Journaling'}}
@@ -31,12 +32,12 @@
       </p>
     </div>
 
-    <div class="card">
+    <!-- <div class="card">
       <h2>📝 Quizzes</h2>
       <p>
         Understand your mental health better. <a routerLink="/quizzes">Take a Quiz</a>.
       </p>
-    </div>
+    </div> -->
 
     <div class="card">
       <h2>💬 Community</h2>

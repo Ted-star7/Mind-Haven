@@ -1,20 +1,47 @@
+<!-- Main Content -->
+<div class="main-content">
+    <h1>Community (Talk Program)</h1>
+    <p>Join our community and talk with others who understand. Share your thoughts and see feedback from others.</p>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h1>Community (Talk Program)</h1>
-        <p>Join our community and talk with others who understand. Share your thoughts and see feedback from others.</p>
+    <!-- Status Messages -->
+    <div *ngIf="errorMessage" class="alert error">
+        {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert success">
+        {{ successMessage }}
+    </div>
 
-        <div class="community-card">
-            <h2>Community Feedback</h2>
-            <div class="feedback">
-                <p><span class="user">Joe:</span> I am a survivor and I want to share my story.</p>
-                <p><span class="user">Anna:</span> Thank you for sharing, Joe. Your story is inspiring!</p>
-                <p><span class="user">Mark:</span> I have been struggling with anxiety, and it's comforting to know I'm not alone.</p>
-                <p><span class="user">Lisa:</span> This community has been a great support system for me. Thank you all!</p>
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="community-card">
+        <h2>Community Feedback</h2>
+        <div class="feedback">
+            <div *ngIf="!isLoading && posts.length === 0" class="no-posts">
+                No posts yet. Be the first to share your thoughts!
             </div>
-            <form>
-                <textarea rows="4" placeholder="Share your thoughts..."></textarea>
-                <button type="submit">Submit</button>
-            </form>
-            <p class="quote">"Together, we are stronger."</p>
+            <div *ngFor="let post of posts" class="post">
+                <p>
+                    <span class="user">{{ post.name }}:</span> 
+                    {{ post.thoughts }}
+                    <span class="post-date">{{ formatDate(post.date) }}</span>
+                </p>
+            </div>
         </div>
+        <form (ngSubmit)="submitPost()">
+            <textarea 
+                [(ngModel)]="newPostText" 
+                name="newPostText"
+                rows="4" 
+                placeholder="Share your thoughts..."
+                [disabled]="isSubmitting"></textarea>
+            <button type="submit" [disabled]="isSubmitting">
+                <span *ngIf="!isSubmitting">Submit</span>
+                <span *ngIf="isSubmitting">Posting...</span>
+            </button>
+        </form>
+        <p class="quote">"Together, we are stronger."</p>
+    </div>
+</div>

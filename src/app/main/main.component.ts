@@ -24,42 +24,54 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStreakData();
-    this.checkStreakStatus();
   }
-
+  
   loadStreakData(): void {
-    // Get streak from session service
-    this.streak = Number(this.sessionService.getStreak()) || 0;
+    // First try to get from session
+    const streakFromSession = this.sessionService.getStreak();
 
-    // In a real app, you would fetch this from your API
-    // Example:
-    // this.servicesService.getRequest('/api/user/streak')
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.streak = data.streak;
-    //       this.lastJournalDate = new Date(data.lastJournalDate);
-    //       this.loading = false;
-    //       this.checkStreakStatus();
-    //     },
-    //     error: (error) => {
-    //       console.error('Error loading streak data:', error);
-    //       this.loading = false;
-    //     }
-    //   });
+    if (streakFromSession) {
+      this.streak = parseInt(streakFromSession, 10);
+      this.loading = false;
+      this.checkStreakStatus();
+    } else {
+      // If not in session, try to fetch from API
+      const userId = this.sessionService.getUserId();
+      const token = this.sessionService.gettoken();
+
+      if (userId && token) {
+        this.servicesService.getMethod(`/api/user/streak/${userId}`, token)
+          .subscribe({
+            next: (response: any) => {
+              this.streak = response.streak || 0;
+              this.sessionService.saveStreak(this.streak);
+              this.loading = false;
+              this.checkStreakStatus();
+            },
+            error: (error) => {
+              console.error('Error loading streak data:', error);
+              this.streak = 0;
+              this.loading = false;
+            }
+          });
+      } else {
+        this.streak = 0;
+        this.loading = false;
+      }
+    }
   }
 
   checkStreakStatus(): void {
-    // Check if streak is about to expire (within last 24 hours)
     if (this.streak > 0) {
       const now = new Date();
-      const hoursSinceLastJournal = 24; // This would normally be calculated from lastJournalDate
+      const hoursSinceLastJournal = 24; // This should be calculated from lastJournalDate
 
-      if (hoursSinceLastJournal >= 20) { // Warning at 20 hours
-        this.streakWarning = true;
+      // Show warning if approaching streak break time
+      this.streakWarning = hoursSinceLastJournal >= 20;
 
-        if (hoursSinceLastJournal >= 24) {
-          this.resetStreak();
-        }
+      // Reset if streak is broken
+      if (hoursSinceLastJournal >= 24) {
+        this.resetStreak();
       }
     }
   }
@@ -67,20 +79,28 @@ export class MainComponent implements OnInit {
   resetStreak(): void {
     this.streak = 0;
     this.streakWarning = false;
-    // In a real app, you would update this on the server
-    // Example:
-    // this.servicesService.postRequest('/api/user/reset-streak', {})
-    //   .subscribe({
-    //     next: () => console.log('Streak reset'),
-    //     error: (error) => console.error('Error resetting streak:', error)
-    //   });
+    this.sessionService.saveStreak(0);
+
+    // Optional: Update server about streak reset
+    const userId = this.sessionService.getUserId();
+    const token = this.sessionService.gettoken();
+
+    if (userId && token) {
+      this.servicesService.postRequest(
+        `/api/user/reset-streak/${userId}`,
+        {},
+        token
+      ).subscribe({
+        error: (error) => console.error('Failed to update streak on server:', error)
+      });
+    }
   }
 
   getStreakMessage(): string {
     if (this.streak === 0) {
       return 'Start journaling today to begin your streak!';
     } else if (this.streakWarning) {
-      return `Your streak will end soon! Journal within the next ${24 - 20} hours to keep it alive.`;
+      return 'Your streak will end soon! Journal today to keep it alive.';
     } else {
       return `Keep it going! You're on a ${this.streak}-day streak.`;
     }

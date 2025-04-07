@@ -11,6 +11,7 @@ import { JournalComponent } from './journal/journal.component';
 import { ArticlesComponent } from './articles/articles.component';
 import { MainComponent } from './main/main.component';
 import { CommunityComponent } from './community/community.component';
+import { ChatBotComponent } from './chat-bot/chat-bot.component';
 
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
   {path: 'journal', component: JournalComponent},
   {path: 'articles', component: ArticlesComponent},
   {path: 'dashboard', component: MainComponent},
-  {path: 'community', component: CommunityComponent}
+  {path: 'community', component: CommunityComponent},
+  {path: 'mindhaven-ai', component: ChatBotComponent}
   
 ];
