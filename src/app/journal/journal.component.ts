@@ -150,7 +150,7 @@ export class JournalComponent implements OnInit {
 
     this.loading = true;
 
-    this.servicesService.deleteRequest(`/api/mood-logger/delete/${userId}/${entryId}`, token).subscribe({
+    this.servicesService.deleteRequest(`/api/mood-logger/logs/${userId}/${entryId}`, token).subscribe({
       next: () => {
         this.loadPastEntries();
         this.loading = false;
