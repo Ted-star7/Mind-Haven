@@ -53,7 +53,7 @@
                   placeholder="What are you grateful for today? Write your thoughts here..."></textarea>
         <input class="tags-input" 
                type="text" 
-               [(ngModel)]="tags"
+               [(ngModel)]="tag"
                placeholder="Add tags (e.g., Family, Health, Work)...">
         <button class="save-button" (click)="saveJournalEntry()" [disabled]="isSavingEntry">
             <span *ngIf="!isSavingEntry">Save Entry</span>

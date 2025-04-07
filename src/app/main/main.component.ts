@@ -40,7 +40,7 @@ export class MainComponent implements OnInit {
       const token = this.sessionService.gettoken();
 
       if (userId && token) {
-        this.servicesService.getMethod(`/api/user/streak/${userId}`, token)
+        this.servicesService.getRequest(`/api/user/streak/${userId}`, token)
           .subscribe({
             next: (response: any) => {
               this.streak = response.streak || 0;

@@ -20,16 +20,22 @@ export class ServicesService {
   }
 
   // GET request without token
-  public getRequest(endpoint: string): Observable<any> {
-    console.log(`Making GET request to: ${this.url}${endpoint}`);
-    return this.httpClient.get(`${this.url}${endpoint}`)
-      .pipe(catchError(this.handleError));
-  }
+  // public getRequest(endpoint: string): Observable<any> {
+  //   console.log(`Making GET request to: ${this.url}${endpoint}`);
+  //   return this.httpClient.get(`${this.url}${endpoint}`)
+  //     .pipe(catchError(this.handleError));
+  // }
 
-  // GET request with token
-  public getMethod(endpoint: string, token: string | null): Observable<any> {
+  public getRequest(endpoint: string, token: string | null): Observable<any> {
     console.log(`Making authenticated GET request to: ${this.url}${endpoint}`);
-    const headers = this.createHeaders(token);
+
+    // Create headers without Content-Type for GET requests
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    headers = headers.set('ngrok-skip-browser-warning', '6024');
+
     return this.httpClient.get(`${this.url}${endpoint}`, { headers })
       .pipe(catchError(this.handleError));
   }

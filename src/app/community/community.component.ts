@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http'; 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +21,7 @@ interface NewPostRequest {
 @Component({
   selector: 'app-community',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './community.component.html',
   styleUrls: ['./community.component.css']
 })
@@ -42,8 +43,18 @@ export class CommunityComponent implements OnInit {
   }
 
   loadCommunityPosts(): void {
+    
+    const token = this.sessionService.gettoken();
+
+    if (!token) {
+      this.errorMessage = 'You need to be logged in to view community posts';
+      setTimeout(() => this.errorMessage = null, 5000);
+      this.isLoading = false;
+      return;
+    }
+
     this.isLoading = true;
-    this.servicesService.getRequest('/api/forum/chats')
+    this.servicesService.getRequest('/api/forum/chats', token)
       .pipe(
         finalize(() => this.isLoading = false)
       )
@@ -58,8 +69,8 @@ export class CommunityComponent implements OnInit {
         }
       });
   }
-
   submitPost(): void {
+    const token = this.sessionService.gettoken();
     if (!this.newPostText.trim()) {
       this.errorMessage = 'Please enter your thoughts before submitting.';
       setTimeout(() => this.errorMessage = null, 3000);
@@ -78,11 +89,8 @@ export class CommunityComponent implements OnInit {
     };
 
     this.isSubmitting = true;
-    this.servicesService.postRequest(
-      `/api/forum/new-chat/${userId}`,
-      postData,
-      this.sessionService.gettoken() || ''
-    ).pipe(
+    this.servicesService.postRequest(`/api/forum/new-chat/${userId}`,postData,token)
+    .pipe(
       finalize(() => this.isSubmitting = false)
     ).subscribe({
       next: (newPost: CommunityPost) => {

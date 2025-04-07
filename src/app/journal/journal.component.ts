@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http'; 
 import { Component, OnInit } from '@angular/core';
 import { ServicesService } from '../services/consume.service';
 import { SessionService } from '../services/session.service';
@@ -15,14 +16,14 @@ interface JournalEntry {
 @Component({
   selector: 'app-journal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './journal.component.html',
   styleUrls: ['./journal.component.css']
 })
 export class JournalComponent implements OnInit {
   selectedMood: string | null = null;
   gratitudeEntry: string = '';
-  tags: string = '';
+  tag: string = '';
   pastEntries: JournalEntry[] = [];
 
   isLoadingEntries: boolean = false;
@@ -59,7 +60,7 @@ export class JournalComponent implements OnInit {
     this.isLoadingEntries = true;
     this.loading = true;
 
-    this.servicesService.getMethod(`/api/mood-logger/get-all/${userId}`, token).subscribe({
+    this.servicesService.getRequest(`/api/mood-logger/logs/${userId}`, token).subscribe({
       next: (response) => {
         this.pastEntries = response || [];
         this.isLoadingEntries = false;
@@ -91,7 +92,7 @@ export class JournalComponent implements OnInit {
     const payload = {
       mood: this.selectedMood,
       description: this.gratitudeEntry,
-      tag: this.tags
+      tag: this.tag
     };
 
     this.isSavingEntry = true;
@@ -116,7 +117,7 @@ export class JournalComponent implements OnInit {
   resetForm(): void {
     this.selectedMood = null;
     this.gratitudeEntry = '';
-    this.tags = '';
+    this.tag = '';
   }
 
   selectMood(mood: string): void {
