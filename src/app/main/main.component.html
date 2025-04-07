@@ -3,14 +3,34 @@
   <p>Your mental health journey starts here. Take the first step today!</p>
 
   <!-- Streak Section -->
-  <div class="streak-card" [class.warning]="streakWarning">
-    <h2 *ngIf="!loading">🔥 Your Streak: {{streak}} Days</h2>
-  <div *ngIf="loading" class="streak-loading">Loading your streak...</div>
-    <p>{{getStreakMessage()}}</p>
-    <a routerLink="/journal" class="cta-button">
-      {{streak > 0 ? 'Continue Journaling' : 'Start Journaling'}}
-    </a>
-    <div *ngIf="streakWarning" class="streak-alert">
+  <div class="streak-card" [class.warning]="streakStatus === 'dying'" [class.expired]="streakStatus === 'expired'">
+    <h2 *ngIf="!loading">
+      <span class="flame-icon">{{getFlameIcon()}}</span> 
+      Your Streak: {{streak}} Days
+    </h2>
+    <div *ngIf="loading" class="streak-loading">Loading your streak...</div>
+    
+    <!-- Error message display -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{errorMessage}}
+    </div>
+    
+    <p *ngIf="!errorMessage">{{getStreakMessage()}}</p>
+    
+    <div class="streak-actions">
+      <a routerLink="/journal" class="cta-button">
+        {{streak > 0 ? 'Continue Journaling' : 'Start Journaling'}}
+      </a>
+      <button *ngIf="streakStatus === 'expired' && restoreAttempts < maxRestoreAttempts" 
+              (click)="restoreStreak()" 
+              class="restore-button"
+              [disabled]="restoreInProgress">
+        <span *ngIf="!restoreInProgress">🔄 Restore Streak ({{maxRestoreAttempts - restoreAttempts}} left)</span>
+        <span *ngIf="restoreInProgress">⏳ Restoring...</span>
+      </button>
+    </div>
+    
+    <div *ngIf="streakStatus === 'dying'" class="streak-alert">
       ⏰ Don't break your streak! Journal now to keep it alive.
     </div>
   </div>
@@ -31,13 +51,6 @@
         <a routerLink="/mindhaven-ai">Try AI Support</a>.
       </p>
     </div>
-
-    <!-- <div class="card">
-      <h2>📝 Quizzes</h2>
-      <p>
-        Understand your mental health better. <a routerLink="/quizzes">Take a Quiz</a>.
-      </p>
-    </div> -->
 
     <div class="card">
       <h2>💬 Community</h2>

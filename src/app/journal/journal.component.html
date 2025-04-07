@@ -10,7 +10,7 @@
         Entry saved successfully!
     </div>
     <div *ngIf="saveError" class="alert error">
-        Please select a mood and make sure you're logged in.
+        {{ saveError }}
     </div>
 
     <!-- Loading Spinner -->
@@ -61,8 +61,7 @@
         </button>
     </div>
 
-    <!-- Scientific Backing -->
-    <div class="card quote-card">
+     <div class="card quote-card">
         <h2>The Science Behind Gratitude</h2>
         <p><em>"Research has shown that practicing gratitude can significantly improve mental well-being and overall happiness. According to Seligman et al. in their study, <b>'Positive Psychology Progress: Empirical Validation of Interventions'</b> (American Psychologist, July-August 2005), gratitude exercises lead to increased life satisfaction and reduced depressive symptoms."</em></p>
         <p><em>"Additionally, <b>'The Science of Gratitude'</b>, a report by the John Templeton Foundation and the Greater Good Science Center at UC Berkeley (May 2018), highlights how gratitude rewires the brain to focus on positive experiences, fostering emotional resilience and stronger social connections."</em></p>
@@ -94,6 +93,60 @@
             </button>
         </div>
     </div>
+
+    <!-- Mood Visualization -->
+    <div class="card">
+        <h2>Mood Over Time</h2>
+        <div *ngIf="pastEntries.length > 0; else noMoodData">
+            <canvas baseChart
+                [type]="'line'"
+                [data]="lineChartData"
+                [options]="chartOptions">
+            </canvas>
+        </div>
+        <ng-template #noMoodData>
+            <p class="no-data">Not enough data to display mood trends yet.</p>
+        </ng-template>
+    </div>
+
+    <div class="card">
+        <h2>Mood Distribution</h2>
+        <div *ngIf="pastEntries.length > 0; else noPieData">
+            <canvas baseChart
+                [type]="'pie'"
+                [data]="pieChartData"
+                [options]="pieChartOptions">
+            </canvas>
+        </div>
+        <ng-template #noPieData>
+            <p class="no-data">Not enough data to display mood distribution yet.</p>
+        </ng-template>
+    </div>
+
+    <!-- Tag Correlations -->
+    <div class="card" *ngIf="pastEntries.length > 0 && getMoodTagCorrelations().length > 0">
+        <h2>Tag Mood Correlations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tag</th>
+                    <th>Average Mood</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let correlation of getMoodTagCorrelations()">
+                    <td>{{ correlation.tag }}</td>
+                    <td>
+                        {{ correlation.averageMood | number:'1.1-1' }} 
+                        ({{ getMoodLabel(correlation.averageMood) }})
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Scientific Backing -->
+   
 </div>
 
 <!-- Floating Action Button for Quick Entry -->

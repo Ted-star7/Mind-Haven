@@ -98,7 +98,83 @@ body {
 .card a:hover {
   text-decoration: underline;
 }
+/* Streak Card States */
+.streak-card.warning {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
 
+.streak-card.expired {
+  background-color: #f8d7da;
+  border-left: 4px solid #dc3545;
+}
+
+/* Flame Icon */
+.flame-icon {
+  font-size: 1.2em;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* Restore Button */
+.restore-button {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.restore-button:hover {
+  background-color: #5a6268;
+}
+
+/* Streak Alert */
+.streak-alert {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #fff3cd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.restore-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+  padding: 8px;
+  background-color: #f8d7da;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.restore-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #6c757d;
+}
+
+.streak-loading {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.flame-icon {
+  font-size: 1.2em;
+  vertical-align: middle;
+}
 /* Responsive */
 @media (max-width: 768px) {
   .container {

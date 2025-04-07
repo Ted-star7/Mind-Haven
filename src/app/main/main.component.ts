@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../services/session.service';
 import { ServicesService } from '../services/consume.service';
+import { SessionService } from '../services/session.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -13,96 +13,140 @@ import { RouterModule } from '@angular/router';
 })
 export class MainComponent implements OnInit {
   streak: number = 0;
-  lastJournalDate: Date | null = null;
-  streakWarning: boolean = false;
   loading: boolean = true;
+  restoreAttempts: number = 0;
+  maxRestoreAttempts: number = 3;
+  streakStatus: 'active' | 'dying' | 'expired' = 'active';
+  hoursSinceLastJournal: number = 0;
+  userId: string | null = null;
+  token: string | null = null;
+  restoreInProgress: boolean = false;
+  errorMessage: string | null = null;
 
   constructor(
-    private sessionService: SessionService,
-    private servicesService: ServicesService
+    private servicesService: ServicesService,
+    private sessionService: SessionService
   ) { }
 
   ngOnInit(): void {
+    this.userId = this.sessionService.getUserId();
+    this.token = this.sessionService.gettoken();
     this.loadStreakData();
   }
-  
+
   loadStreakData(): void {
-    // First try to get from session
-    const streakFromSession = this.sessionService.getStreak();
-
-    if (streakFromSession) {
-      this.streak = parseInt(streakFromSession, 10);
-      this.loading = false;
-      this.checkStreakStatus();
-    } else {
-      // If not in session, try to fetch from API
-      const userId = this.sessionService.getUserId();
-      const token = this.sessionService.gettoken();
-
-      if (userId && token) {
-        this.servicesService.getRequest(`/api/user/streak/${userId}`, token)
-          .subscribe({
-            next: (response: any) => {
-              this.streak = response.streak || 0;
-              this.sessionService.saveStreak(this.streak);
-              this.loading = false;
-              this.checkStreakStatus();
-            },
-            error: (error) => {
-              console.error('Error loading streak data:', error);
-              this.streak = 0;
-              this.loading = false;
-            }
-          });
-      } else {
-        this.streak = 0;
-        this.loading = false;
-      }
+    if (!this.userId || !this.token) {
+      this.handleStreakError();
+      return;
     }
-  }
 
-  checkStreakStatus(): void {
-    if (this.streak > 0) {
-      const now = new Date();
-      const hoursSinceLastJournal = 24; // This should be calculated from lastJournalDate
-
-      // Show warning if approaching streak break time
-      this.streakWarning = hoursSinceLastJournal >= 20;
-
-      // Reset if streak is broken
-      if (hoursSinceLastJournal >= 24) {
-        this.resetStreak();
-      }
-    }
-  }
-
-  resetStreak(): void {
-    this.streak = 0;
-    this.streakWarning = false;
-    this.sessionService.saveStreak(0);
-
-    // Optional: Update server about streak reset
-    const userId = this.sessionService.getUserId();
-    const token = this.sessionService.gettoken();
-
-    if (userId && token) {
-      this.servicesService.postRequest(
-        `/api/user/reset-streak/${userId}`,
-        {},
-        token
-      ).subscribe({
-        error: (error) => console.error('Failed to update streak on server:', error)
+    this.loading = true;
+    this.errorMessage = null;
+    this.servicesService.getRequest(`/api/streak/${this.userId}`, this.token)
+      .subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.streak = response.data.streak || 0;
+            this.restoreAttempts = response.data.resetStreakCount || 0;
+            this.hoursSinceLastJournal = response.data.hoursSinceLastJournal || 0;
+            this.updateStreakStatus();
+          } else {
+            this.errorMessage = response.message || 'Failed to load streak data';
+            console.error('Error loading streak data:', response.message);
+            this.handleStreakError();
+          }
+          this.loading = false;
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to connect to server';
+          console.error('Error loading streak data:', error);
+          this.handleStreakError();
+          this.loading = false;
+        }
       });
+  }
+
+  updateStreakStatus(): void {
+    if (this.streak === 0) {
+      this.streakStatus = 'expired';
+    } else if (this.hoursSinceLastJournal >= 24) {
+      this.streakStatus = 'expired';
+    } else if (this.hoursSinceLastJournal >= 20) {
+      this.streakStatus = 'dying';
+    } else {
+      this.streakStatus = 'active';
     }
+  }
+
+  restoreStreak(): void {
+    if (this.restoreAttempts >= this.maxRestoreAttempts || !this.userId || !this.token || this.restoreInProgress) {
+      return;
+    }
+
+    this.restoreInProgress = true;
+    this.errorMessage = null;
+
+    // Include the current restore attempts count in the request
+    const requestBody = {
+      currentResetCount: this.restoreAttempts
+    };
+
+    this.servicesService.postRequest(`/api/streak/restore/${this.userId}`, requestBody, this.token)
+      .subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.streak = response.data.streak || 0;
+            this.restoreAttempts = response.data.resetStreakCount || 0;
+            this.hoursSinceLastJournal = response.data.hoursSinceLastJournal || 0;
+            this.updateStreakStatus();
+          } else {
+            this.errorMessage = response.message || 'Failed to restore streak';
+            console.error('Failed to restore streak:', response.message);
+          }
+          this.restoreInProgress = false;
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to connect to server';
+          console.error('Error restoring streak:', error);
+          this.restoreInProgress = false;
+        }
+      });
+  }
+
+  handleStreakError(): void {
+    this.streak = 0;
+    this.restoreAttempts = 0;
+    this.streakStatus = 'expired';
   }
 
   getStreakMessage(): string {
-    if (this.streak === 0) {
-      return 'Start journaling today to begin your streak!';
-    } else if (this.streakWarning) {
-      return 'Your streak will end soon! Journal today to keep it alive.';
-    } else {
-      return `Keep it going! You're on a ${this.streak}-day streak.`;
+    if (this.errorMessage) {
+      return this.errorMessage;
+    }
+
+    switch (this.streakStatus) {
+      case 'active':
+        return `Keep it going! You're on a ${this.streak}-day streak.`;
+      case 'dying':
+        return `Your flame is fading! Journal soon to keep your ${this.streak}-day streak alive.`;
+      case 'expired':
+        if (this.restoreAttempts < this.maxRestoreAttempts) {
+          const remainingAttempts = this.maxRestoreAttempts - this.restoreAttempts;
+          return `Your streak expired! You can restore it ${remainingAttempts} more time(s).`;
+        } else {
+          return 'Your streak has ended. Start journaling to begin a new one!';
+        }
+      default:
+        return 'Start journaling today to begin your streak!';
+    }
+  }
+
+  getFlameIcon(): string {
+    switch (this.streakStatus) {
+      case 'active': return '🔥';
+      case 'dying': return '🕯️';
+      case 'expired': return '💀';
+      default: return '🔥';
     }
   }
 }
