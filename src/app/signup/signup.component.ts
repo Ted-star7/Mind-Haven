@@ -101,7 +101,7 @@ export class SignupComponent {
       () => {
         this.isLoading = false;
         this.showSnackbar('Sign up successful!');
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/signup']);
       },
       (error) => {
         this.isLoading = false;
