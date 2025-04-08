@@ -22,6 +22,7 @@ export class MainComponent implements OnInit {
   token: string | null = null;
   restoreInProgress: boolean = false;
   errorMessage: string | null = null;
+  hasJournaledBefore: boolean = false;
 
   constructor(
     private servicesService: ServicesService,
@@ -42,6 +43,7 @@ export class MainComponent implements OnInit {
 
     this.loading = true;
     this.errorMessage = null;
+
     this.servicesService.getRequest(`/api/streak/${this.userId}`, this.token)
       .subscribe({
         next: (response: any) => {
@@ -49,6 +51,7 @@ export class MainComponent implements OnInit {
             this.streak = response.data.streak || 0;
             this.restoreAttempts = response.data.resetStreakCount || 0;
             this.hoursSinceLastJournal = response.data.hoursSinceLastJournal || 0;
+            this.hasJournaledBefore = response.data.hasJournaledBefore || false;
             this.updateStreakStatus();
           } else {
             this.errorMessage = response.message || 'Failed to load streak data';
@@ -86,19 +89,12 @@ export class MainComponent implements OnInit {
     this.restoreInProgress = true;
     this.errorMessage = null;
 
-    // Include the current restore attempts count in the request
-    const requestBody = {
-      currentResetCount: this.restoreAttempts
-    };
-
-    this.servicesService.postRequest(`/api/streak/restore/${this.userId}`, requestBody, this.token)
+    this.servicesService.getRequest(`/api/streak/restore/${this.userId}`, this.token)
       .subscribe({
         next: (response: any) => {
           if (response.success) {
-            this.streak = response.data.streak || 0;
-            this.restoreAttempts = response.data.resetStreakCount || 0;
-            this.hoursSinceLastJournal = response.data.hoursSinceLastJournal || 0;
-            this.updateStreakStatus();
+            // After successful restore, reload the streak data
+            this.loadStreakData();
           } else {
             this.errorMessage = response.message || 'Failed to restore streak';
             console.error('Failed to restore streak:', response.message);
@@ -117,11 +113,16 @@ export class MainComponent implements OnInit {
     this.streak = 0;
     this.restoreAttempts = 0;
     this.streakStatus = 'expired';
+    this.hasJournaledBefore = false;
   }
 
   getStreakMessage(): string {
     if (this.errorMessage) {
       return this.errorMessage;
+    }
+
+    if (!this.hasJournaledBefore) {
+      return 'Start journaling today to begin your streak!';
     }
 
     switch (this.streakStatus) {
