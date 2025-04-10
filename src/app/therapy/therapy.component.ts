@@ -13,11 +13,18 @@ import { ViewportScroller } from '@angular/common';
   styleUrls: ['./therapy.component.css'],
 })
 export class TherapyComponent {
+ 
+  isMenuOpen = false; 
 
   constructor(
     private router: Router,
     private viewportScroller: ViewportScroller
   ){}
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   therapyEffectivenessData = {
     labels: ['No Improvement', 'Moderate Improvement', 'Significant Improvement'],
     datasets: [

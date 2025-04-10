@@ -1,5 +1,6 @@
 <div class="body">
   <div class="container">
+    <!-- Navbar remains unchanged -->
     <div class="navbar">
       <div class="logo">
         <i class="fas fa-peace"> </i>
@@ -17,8 +18,9 @@
         <div class="line"></div>
         <div class="line"></div>
       </div>
-    
     </div>
+    
+    <!-- Hero section remains unchanged -->
     <div class="hero">
       <div class="content">
         <h2>Mental health: The growing crisis. The urgent solution.</h2>
@@ -35,7 +37,6 @@
         </p>
 
         <button class="btn" (click)="navigateToSignup()">SIGN UP TODAY</button>
-         
       </div>
       <div class="image">
         <img
@@ -64,11 +65,32 @@
     </div>
   </div>
 
+  <!--Mental Health Section -->
+  <div class="page-divider">
+  <div class="divider-wave">
+    <div class="wave-content">
+      <span class="wave-text">Together in Mental Wellness</span>
+      <div class="wave-icons">
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-hands-helping"></i>
+        <i class="fas fa-seedling"></i>
+      </div>
+    </div>
+  </div>
+</div>
   <div class="mental-health-section">
     <div class="container">
-      <h2 class="section-title">What is Mental Health?</h2>
+      <div class="section-header">
+        <h2 class="section-title">Understanding Mental Health</h2>
+        <p class="section-subtitle">Knowledge is the first step toward healing</p>
+      </div>
+      
       <div class="content-box">
         <div class="content-item">
+          <div class="content-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>What is Mental Health?</h3>
           <p>
             Mental health refers to a person's emotional, psychological, and
             social well-being. It influences how individuals think, feel, and
@@ -78,6 +100,10 @@
           </p>
         </div>
         <div class="content-item">
+          <div class="content-icon">
+            <i class="fas fa-balance-scale"></i>
+          </div>
+          <h3>Beyond the Absence of Illness</h3>
           <p>
             Mental health is not merely the absence of mental illness; it
             encompasses the presence of positive characteristics such as
@@ -89,129 +115,201 @@
         </div>
       </div>
 
-      <h3 class="section-title">Mental Health Topics</h3>
-      <div class="topics">
-        <div class="topic-card">
-          <h4>Early Warning Signs & Symptoms</h4>
-          <ul>
-            <li>Persistent sadness or low mood.</li>
-            <li>Excessive worry or fear.</li>
-            <li>Withdrawal from friends, family, and activities.</li>
-            <li>Changes in sleep or appetite.</li>
-            <li>Difficulty concentrating or making decisions.</li>
-            <li>Irritability or frequent mood swings.</li>
-            <li>
-              Physical symptoms like headaches or stomachaches without a clear
-              cause.
-            </li>
-          </ul>
-        </div>
+      <div class="knowledge-center">
+        <h3 class="section-title">Mental Health Knowledge Center</h3>
+        
+        <div class="topics-grid">
+          <div class="topic-card">
+            <div class="topic-header">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h4>Early Warning Signs & Symptoms</h4>
+            </div>
+            <ul>
+              <li><i class="fas fa-circle"></i> Persistent sadness or low mood</li>
+              <li><i class="fas fa-circle"></i> Excessive worry or fear</li>
+              <li><i class="fas fa-circle"></i> Withdrawal from social activities</li>
+              <li><i class="fas fa-circle"></i> Changes in sleep or appetite</li>
+              <li><i class="fas fa-circle"></i> Difficulty concentrating</li>
+              <li><i class="fas fa-circle"></i> Frequent mood swings</li>
+              <li><i class="fas fa-circle"></i> Unexplained physical symptoms</li>
+            </ul>
+          </div>
 
-        <div class="topic-card">
-          <h4>Mental Health Conditions</h4>
-          <ul>
-            <li>
-              <strong>Depression:</strong> Characterized by prolonged sadness,
-              lack of energy, and disinterest in activities.
-            </li>
-            <li>
-              <strong>Anxiety Disorders:</strong> Involves excessive worry,
-              fear, or panic attacks.
-            </li>
-            <li>
-              <strong>Bipolar Disorder:</strong> Extreme mood swings ranging
-              from mania (high energy) to depression.
-            </li>
-            <li>
-              <strong>Schizophrenia:</strong> Affects perception and thinking,
-              leading to delusions or hallucinations.
-            </li>
-            <li>
-              <strong>Post-Traumatic Stress Disorder (PTSD):</strong> Triggered
-              by traumatic events, causing flashbacks, nightmares, or severe
-              anxiety.
-            </li>
-          </ul>
+          <div class="topic-card">
+            <div class="topic-header">
+              <i class="fas fa-diagnoses"></i>
+              <h4>Mental Health Conditions</h4>
+            </div>
+            <div class="condition-item">
+              <h5>Depression</h5>
+              <p>Characterized by prolonged sadness, lack of energy, and disinterest in activities.</p>
+            </div>
+            <div class="condition-item">
+              <h5>Anxiety Disorders</h5>
+              <p>Involves excessive worry, fear, or panic attacks.</p>
+            </div>
+            <div class="condition-item">
+              <h5>Bipolar Disorder</h5>
+              <p>Extreme mood swings ranging from mania to depression.</p>
+            </div>
+            <div class="condition-item">
+              <h5>PTSD</h5>
+              <p>Triggered by traumatic events, causing flashbacks and severe anxiety.</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <h3 class="section-title">
-        Tips for Living Well with a Mental Health Condition
-      </h3>
-      <div class="tips">
-        <div class="tip-card">
-          <i class="fas fa-running"></i>
-          <h4>Stay Active</h4>
-          <p>Regular physical activity can improve mood and reduce symptoms.</p>
-        </div>
-        <div class="tip-card">
-          <i class="fas fa-users"></i>
-          <h4>Build a Support Network</h4>
-          <p>Maintain connections with friends, family, or support groups.</p>
-        </div>
-        <div class="tip-card">
-          <i class="fas fa-utensils"></i>
-          <h4>Adopt Healthy Habits</h4>
-          <p>Eat a balanced diet, sleep well, and avoid substance abuse.</p>
-        </div>
-        <div class="tip-card">
-          <i class="fas fa-spa"></i>
-          <h4>Practice Mindfulness</h4>
-          <p>Techniques like meditation and yoga can reduce stress.</p>
-        </div>
-        <div class="tip-card">
-          <i class="fas fa-stethoscope"></i>
-          <h4>Seek Professional Help</h4>
-          <p>
-            Therapy, counseling, and medication (if prescribed) can manage
-            symptoms effectively.
-          </p>
+      <div class="wellness-section">
+        <h3 class="section-title">
+          <i class="fas fa-heartbeat"></i> Living Well with Mental Health
+        </h3>
+        <p class="wellness-intro">
+          Small daily practices can make a significant difference in managing mental health.
+          Here are evidence-based strategies to incorporate into your routine:
+        </p>
+        
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-visual">
+              <div class="tip-icon">
+                <i class="fas fa-running"></i>
+              </div>
+              <div class="progress-ring">
+                <svg width="60" height="60">
+                  <circle class="progress-ring-circle" stroke="#ffb400" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+                </svg>
+              </div>
+            </div>
+            <h4>Stay Active</h4>
+            <p>Regular physical activity boosts endorphins and reduces symptoms of anxiety and depression.</p>
+            <a href="/signup" class="tip-link">Learn exercises <i class="fas fa-arrow-right"></i></a>
+          </div>
+          
+          <div class="tip-card">
+            <div class="tip-visual">
+              <div class="tip-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="progress-ring">
+                <svg width="60" height="60">
+                  <circle class="progress-ring-circle" stroke="#ffb400" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+                </svg>
+              </div>
+            </div>
+            <h4>Build Support</h4>
+            <p>Strong social connections provide emotional support and reduce feelings of isolation.</p>
+            <a href="/signup" class="tip-link">Find groups <i class="fas fa-arrow-right"></i></a>
+          </div>
+          
+          <div class="tip-card">
+            <div class="tip-visual">
+              <div class="tip-icon">
+                <i class="fas fa-utensils"></i>
+              </div>
+              <div class="progress-ring">
+                <svg width="60" height="60">
+                  <circle class="progress-ring-circle" stroke="#ffb400" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+                </svg>
+              </div>
+            </div>
+            <h4>Healthy Habits</h4>
+            <p>Nutrition and sleep directly impact mood regulation and cognitive function.</p>
+            <a href="/signup" class="tip-link">View guides <i class="fas fa-arrow-right"></i></a>
+          </div>
+          
+          <div class="tip-card">
+            <div class="tip-visual">
+              <div class="tip-icon">
+                <i class="fas fa-spa"></i>
+              </div>
+              <div class="progress-ring">
+                <svg width="60" height="60">
+                  <circle class="progress-ring-circle" stroke="#ffb400" stroke-width="4" fill="transparent" r="26" cx="30" cy="30"/>
+                </svg>
+              </div>
+            </div>
+            <h4>Mindfulness</h4>
+            <p>Meditation and breathing exercises can lower stress hormones and improve focus.</p>
+            <a href="/signup" class="tip-link">Try techniques <i class="fas fa-arrow-right"></i></a>
+          </div>
         </div>
       </div>
 
-      <h3 class="section-title">Resources</h3>
-
-      <section class="resources-section">
-        <h2>Resources</h2>
-        <ul>
-          <li>
-            <a href="https://www.mindhaven.com/articles-guide" target="_blank"
-              >In-depth articles and guides</a
-            >
-          </li>
-          <li>
-            <a href="https://www.mindhaven.com/self-help-tools" target="_blank"
-              >Self-help tools and exercises</a
-            >
-          </li>
-          <li>
-            <a href="https://www.mindhaven.com/support-groups" target="_blank"
-              >Online and local support groups</a
-            >
-          </li>
-        </ul>
-
-        <div class="helplines">
-          <h3>Kenyan Helplines</h3>
-          <ul>
-            <li>
-              <a href="tel:+254712345678"
-                >Kenya Suicide Prevention Helpline: +254 712 345 678</a
-              >
-            </li>
-            <li>
-              <a href="tel:+254800072080"
-                >Kenya National Helpline: +254 800 072 080</a
-              >
-            </li>
-            <li>
-              <a href="/therapy-centre" target="_blank"
-                >Find a Therapist in Kenya</a
-              >
-            </li>
-          </ul>
+      <div class="resources-container">
+        <div class="resources-header">
+          <h3 class="section-title">Helpful Resources</h3>
+          <p class="resources-subtitle">Access our library of mental health tools and information</p>
         </div>
-      </section>
+        
+        <div class="resources-grid">
+          <div class="resource-card" (mouseenter)="showLoginPrompt($event)" (mouseleave)="hideLoginPrompt()">
+            <div class="resource-icon">
+              <i class="fas fa-book-open"></i>
+            </div>
+            <h4>Articles & Guides</h4>
+            <p>In-depth information on various mental health topics</p>
+            <div class="login-prompt">
+              <p>Please login to access this resource</p>
+              <button class="btn-small" (click)="navigateToSignup()">Login Now</button>
+            </div>
+          </div>
+          
+          <div class="resource-card" (mouseenter)="showLoginPrompt($event)" (mouseleave)="hideLoginPrompt()">
+            <div class="resource-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h4>Self-Help Tools</h4>
+            <p>Interactive AI and Journal Sessions</p>
+            <div class="login-prompt">
+              <p>Please login to access this resource</p>
+              <button class="btn-small" (click)="navigateToSignup()">Login Now</button>
+            </div>
+          </div>
+          
+          <div class="resource-card" (mouseenter)="showLoginPrompt($event)" (mouseleave)="hideLoginPrompt()">
+            <div class="resource-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h4>Support Groups</h4>
+            <p>Connect with others facing similar challenges</p>
+            <div class="login-prompt">
+              <p>Please login to access this resource</p>
+              <button class="btn-small" (click)="navigateToSignup()">Login Now</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="emergency-section">
+          <div class="emergency-header">
+            <i class="fas fa-exclamation-circle"></i>
+            <h4>Immediate Help in Kenya</h4>
+          </div>
+          <div class="helpline-cards">
+            <div class="helpline-card">
+              <i class="fas fa-phone-alt"></i>
+              <div>
+                <h5>Suicide Prevention</h5>
+                <a href="tel:+254712345678">+254 712 345 678</a>
+              </div>
+            </div>
+            <div class="helpline-card">
+              <i class="fas fa-phone-alt"></i>
+              <div>
+                <h5>National Helpline</h5>
+                <a href="tel:+254800072080">+254 800 072 080</a>
+              </div>
+            </div>
+            <div class="helpline-card">
+              <i class="fas fa-map-marker-alt"></i>
+              <div>
+                <h5>Therapist Directory</h5>
+                <a href="/therapy-centre">Find local therapists</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

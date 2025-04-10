@@ -1,137 +1,75 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f3f4f6;
+/* ===== Base Styles ===== */
+.community-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
-.main-content {
-  padding: 16px;
+/* ===== Header ===== */
+.community-header {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.main-content h1 {
-  font-size: 32px;
-  margin-bottom: 16px;
+.community-header h1 {
+  font-size: 2.2rem;
+  color: #2b1055;
+  margin-bottom: 10px;
 }
 
-.main-content p {
-  font-size: 18px;
-  margin-bottom: 16px;
+.community-header .subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.community-card {
-  background-color: #fff;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-.community-card h2 {
-  font-size: 24px;
-  margin-bottom: 8px;
-}
-
-.community-card p {
-  font-size: 16px;
-}
-
-.community-card .feedback {
-  margin-top: 16px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.community-card .feedback p {
-  margin: 8px 0;
-  padding: 8px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
-}
-
-.community-card .feedback .user {
-  font-weight: bold;
-  color: #4a90e2;
-}
-
-.community-card form {
-  margin-top: 16px;
-}
-
-.community-card form textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.community-card form button {
-  background-color: #4a90e2;
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.community-card form button:hover {
-  background-color: #357ab8;
-}
-
-.community-card .quote {
-  font-style: italic;
-  color: #555;
-  margin-top: 16px;
-}
-
-.community-card .quote::before {
-  content: "“";
-  font-size: 24px;
-  vertical-align: top;
-  color: #4a90e2;
-}
-
-.community-card .quote::after {
-  content: "”";
-  font-size: 24px;
-  vertical-align: bottom;
-  color: #4a90e2;
-}
-
-/* Add these to your existing CSS */
+/* ===== Alerts ===== */
 .alert {
-  padding: 12px;
-  margin-bottom: 16px;
-  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
 }
 
 .alert.error {
   background-color: #ffebee;
   color: #c62828;
-  border: 1px solid #ef9a9a;
+  border-left: 4px solid #c62828;
 }
 
 .alert.success {
   background-color: #e8f5e9;
   color: #2e7d32;
-  border: 1px solid #a5d6a7;
+  border-left: 4px solid #2e7d32;
 }
 
+.alert i {
+  font-size: 1.2rem;
+}
+
+/* ===== Loading Spinner ===== */
 .loading-spinner {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 40px;
+  color: #555;
 }
 
 .spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
+  border: 4px solid rgba(74, 144, 226, 0.2);
   border-radius: 50%;
   border-top: 4px solid #4a90e2;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
+  margin-bottom: 15px;
 }
 
 @keyframes spin {
@@ -144,27 +82,287 @@ body {
   }
 }
 
-.no-posts {
-  padding: 16px;
-  text-align: center;
-  color: #666;
-  font-style: italic;
+/* ===== Community Card ===== */
+.community-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.card-header h2 {
+  font-size: 1.4rem;
+  color: #2b1055;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.new-post-btn {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s;
+}
+
+.new-post-btn:hover {
+  background-color: #357ab8;
+}
+
+/* ===== Feedback Container ===== */
+.feedback-container {
+  padding: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+}
+
+.no-posts i {
+  font-size: 2rem;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.no-posts p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* ===== Post Styles ===== */
 .post {
-  margin: 8px 0;
-  padding: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
   background-color: #f9f9f9;
-  border-radius: 4px;
+  border-radius: 8px;
+  border-left: 3px solid #4a90e2;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #4a90e2;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #2b1055;
 }
 
 .post-date {
-  float: right;
-  font-size: 0.8em;
-  color: #666;
+  font-size: 0.8rem;
+  color: #888;
+  margin-left: 10px;
 }
 
-button:disabled {
-  background-color: #cccccc !important;
+.post-content {
+  margin: 10px 0;
+  line-height: 1.5;
+  color: #333;
+}
+
+.post-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.like-btn,
+.reply-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.like-btn:hover,
+.reply-btn:hover {
+  background-color: #eee;
+}
+
+/* ===== Post Form ===== */
+.post-form {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #eee;
+}
+
+.post-form textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+
+.post-form textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submit-btn {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #357ab8;
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
   cursor: not-allowed;
+}
+
+.character-count {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0;
+}
+
+/* ===== Community Quote ===== */
+.community-quote {
+  text-align: center;
+  padding: 20px;
+  background-color: #f0f4f8;
+  color: #4a90e2;
+  font-style: italic;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.community-quote i {
+  font-size: 1.5rem;
+  color: #b3cde5;
+}
+
+.community-quote i:first-child {
+  align-self: flex-start;
+}
+
+.community-quote i:last-child {
+  align-self: flex-end;
+}
+
+/* ===== Responsive Styles ===== */
+@media (max-width: 768px) {
+  .community-container {
+    padding: 15px;
+  }
+
+  .community-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .new-post-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .post-header {
+    flex-wrap: wrap;
+  }
+
+  .post-date {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .community-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .community-header .subtitle {
+    font-size: 1rem;
+  }
+
+  .post-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .like-btn,
+  .reply-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .character-count {
+    align-self: flex-end;
+  }
 }

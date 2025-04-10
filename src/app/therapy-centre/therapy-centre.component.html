@@ -1,16 +1,25 @@
-<div class="navbar">
-  <div class="logo">
-    <i class="fas fa-peace"></i>
-    <span>MindHaven</span>
-  </div>
-  <div class="menu">
-    <a href="/" class="active">Home</a>
-    <a href="/therapy-centre">Therapy Centres</a>
-    <a href="/therapy">Therapy</a>
-    <a href="/signup">Log in</a>
-    <a href="/contact">Contact Us</a>
-  </div>
-</div>
+<div class="therapy-centre-container">
+  <!-- Navbar with Hamburger -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-peace"></i>
+      <span>MindHaven</span>
+    </div>
+    
+    <button class="hamburger" (click)="toggleMenu()" aria-label="Menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+    
+    <div class="menu" [class.active]="isMenuOpen">
+      <a href="/" >Home</a>
+      <a href="/therapy-centre" class="active">Therapy Centres</a>
+      <a href="/therapy">Therapy</a>
+      <a href="/signup">Log in</a>
+      <a href="/contact">Contact Us</a>
+    </div>
+  </nav>
 
 <div class="therapy-centre-container">
   <!-- Header Section -->

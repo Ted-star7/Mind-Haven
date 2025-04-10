@@ -30,6 +30,12 @@ interface MoodData {
   styleUrls: ['./journal.component.css']
 })
 export class JournalComponent implements OnInit {
+scrollToJournal() {
+throw new Error('Method not implemented.');
+}
+toggleMenu() {
+throw new Error('Method not implemented.');
+}
   selectedMood: string | null = null;
   selectedMoodScore: number | null = null;
   gratitudeEntry: string = '';

@@ -1,153 +1,165 @@
-<!-- Top Bar -->
-<div class="top-bar">
-    <div class="logo">MindHaven</div>
-</div>
-
-<!-- Main Content -->
-<div class="main-content">
-    <!-- Status Messages -->
-    <div *ngIf="saveSuccess" class="alert success">
-        Entry saved successfully!
-    </div>
-    <div *ngIf="saveError" class="alert error">
-        {{ saveError }}
+<div class="journal-container">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo">MindHaven</div>
+        <!-- <button class="menu-toggle" (click)="toggleMenu()"> -->
+            <span></span>
+            <span></span>
+            <span></span>
+        <!-- </button> -->
     </div>
 
-    <!-- Loading Spinner -->
-    <div *ngIf="isLoadingEntries || isSavingEntry || loading" class="loading-spinner">
-        <div class="spinner"></div>
-    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Status Messages -->
+        <div *ngIf="saveSuccess" class="alert success">
+            Entry saved successfully!
+        </div>
+        <div *ngIf="saveError" class="alert error">
+            {{ saveError }}
+        </div>
 
-    <!-- Journaling Information Section -->
-    <div class="card info-card">
-        <h2>Why Journal Your Mood & Gratitude?</h2>
-        <p>Tracking your mood helps you gain awareness of emotions, recognize patterns, and improve mental well-being.</p>
-        <ul>
-            <li>✅ Become more aware of your emotions and underlying thoughts.</li>
-            <li>✅ Identify trends in your mood over time to see how different activities affect you.</li>
-            <li>✅ Strengthen emotional resilience and develop a gratitude mindset.</li>
-            <li>✅ If needed, share your mood history with a healthcare provider for better insights.</li>
-        </ul>
-    </div>
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoadingEntries || isSavingEntry || loading" class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
 
-    <!-- Mood Selector -->
-    <div class="card">
-        <h2>Select Your Mood</h2>
-        <p>Choose an emoji that best represents how you're feeling today.</p>
-        <div class="mood-picker">
-            <div *ngFor="let mood of moods" 
-                 (click)="selectMood(mood.label)"
-                 [class.selected]="selectedMood === mood.label">
-                <div class="emoji">{{mood.emoji}}</div>
-                <div>{{mood.label}} – {{mood.description}}</div>
+        <div class="card-grid">
+            <!-- Journaling Information Section -->
+            <div class="card info-card">
+                <h2>Why Journal Your Mood & Gratitude?</h2>
+                <p>Tracking your mood helps you gain awareness of emotions, recognize patterns, and improve mental well-being.</p>
+                <ul>
+                    <li>✅ Become more aware of your emotions and underlying thoughts.</li>
+                    <li>✅ Identify trends in your mood over time to see how different activities affect you.</li>
+                    <li>✅ Strengthen emotional resilience and develop a gratitude mindset.</li>
+                    <li>✅ If needed, share your mood history with a healthcare provider for better insights.</li>
+                </ul>
             </div>
-        </div>
-    </div>
 
-    <!-- Gratitude Journaling -->
-    <div class="card">
-        <h2>Gratitude Journal</h2>
-        <p>Practicing gratitude rewires your brain to focus on positivity. Instead of just listing things, try explaining why you're grateful for them.</p>
-        <textarea class="entry-content" 
-                  [(ngModel)]="gratitudeEntry"
-                  placeholder="What are you grateful for today? Write your thoughts here..."></textarea>
-        <input class="tags-input" 
-               type="text" 
-               [(ngModel)]="tag"
-               placeholder="Add tags (e.g., Family, Health, Work)...">
-        <button class="save-button" (click)="saveJournalEntry()" [disabled]="isSavingEntry">
-            <span *ngIf="!isSavingEntry">Save Entry</span>
-            <span *ngIf="isSavingEntry">Saving...</span>
-        </button>
-    </div>
-
-     <div class="card quote-card">
-        <h2>The Science Behind Gratitude</h2>
-        <p><em>"Research has shown that practicing gratitude can significantly improve mental well-being and overall happiness. According to Seligman et al. in their study, <b>'Positive Psychology Progress: Empirical Validation of Interventions'</b> (American Psychologist, July-August 2005), gratitude exercises lead to increased life satisfaction and reduced depressive symptoms."</em></p>
-        <p><em>"Additionally, <b>'The Science of Gratitude'</b>, a report by the John Templeton Foundation and the Greater Good Science Center at UC Berkeley (May 2018), highlights how gratitude rewires the brain to focus on positive experiences, fostering emotional resilience and stronger social connections."</em></p>
-    </div>
-
-    <!-- Past Entries -->
-    <div class="card entries">
-        <h2>Past Journal Entries</h2>
-        <div *ngIf="isLoadingEntries" class="loading-entries">
-            Loading your past entries...
-        </div>
-        <div *ngIf="!isLoadingEntries && pastEntries.length === 0" class="no-entries">
-            No entries yet. Start by adding your first journal entry above.
-        </div>
-        <div *ngFor="let entry of pastEntries" class="entry">
-            <div class="details">
-                <div class="emoji">{{ getMoodEmoji(entry.mood) }}</div>
-                <div>
-                    <div class="date">{{ formatDate(entry.date) }}</div>
-                    <div class="preview">{{ entry.description || 'No description' }}</div>
+            <!-- Mood Selector -->
+            <div class="card">
+                <h2>Select Your Mood</h2>
+                <p>Choose an emoji that best represents how you're feeling today.</p>
+                <div class="mood-picker">
+                    <div *ngFor="let mood of moods" 
+                         (click)="selectMood(mood.label)"
+                         [class.selected]="selectedMood === mood.label">
+                        <div class="emoji">{{mood.emoji}}</div>
+                        <div class="mood-label">{{mood.label}}</div>
+                        <div class="mood-description">{{mood.description}}</div>
+                    </div>
                 </div>
             </div>
-            <div class="tags" *ngIf="entry.tags">
-                <span *ngFor="let tag of entry.tags.split(',')">{{ tag.trim() }}</span>
-            </div>
-            <button class="delete-button" (click)="deleteEntry(entry.id)" [disabled]="loading">
-                <span *ngIf="!loading">Delete</span>
-                <span *ngIf="loading">Deleting...</span>
+        </div>
+
+        <!-- Gratitude Journaling -->
+        <div class="card">
+            <h2>Gratitude Journal</h2>
+            <p>Practicing gratitude rewires your brain to focus on positivity. Instead of just listing things, try explaining why you're grateful for them.</p>
+            <textarea class="entry-content" 
+                      [(ngModel)]="gratitudeEntry"
+                      placeholder="What are you grateful for today? Write your thoughts here..."></textarea>
+            <input class="tags-input" 
+                   type="text" 
+                   [(ngModel)]="tag"
+                   placeholder="Add tags (e.g., Family, Health, Work)...">
+            <button class="save-button" (click)="saveJournalEntry()" [disabled]="isSavingEntry">
+                <span *ngIf="!isSavingEntry">Save Entry</span>
+                <span *ngIf="isSavingEntry">Saving...</span>
             </button>
         </div>
-    </div>
 
-    <!-- Mood Visualization -->
-    <div class="card">
-        <h2>Mood Over Time</h2>
-        <div *ngIf="pastEntries.length > 0; else noMoodData">
-            <canvas baseChart
-                [type]="'line'"
-                [data]="lineChartData"
-                [options]="chartOptions">
-            </canvas>
+        <div class="card-grid">
+            <div class="card quote-card">
+                <h2>The Science Behind Gratitude</h2>
+                <p><em>"Research has shown that practicing gratitude can significantly improve mental well-being and overall happiness."</em></p>
+            </div>
+
+            <!-- Mood Visualization -->
+            <div class="card">
+                <h2>Mood Over Time</h2>
+                <div *ngIf="pastEntries.length > 0; else noMoodData">
+                    <canvas baseChart
+                        [type]="'line'"
+                        [data]="lineChartData"
+                        [options]="chartOptions">
+                    </canvas>
+                </div>
+                <ng-template #noMoodData>
+                    <p class="no-data">Not enough data to display mood trends yet.</p>
+                </ng-template>
+            </div>
         </div>
-        <ng-template #noMoodData>
-            <p class="no-data">Not enough data to display mood trends yet.</p>
-        </ng-template>
-    </div>
 
-    <div class="card">
-        <h2>Mood Distribution</h2>
-        <div *ngIf="pastEntries.length > 0; else noPieData">
-            <canvas baseChart
-                [type]="'pie'"
-                [data]="pieChartData"
-                [options]="pieChartOptions">
-            </canvas>
+        <!-- Past Entries -->
+        <div class="card entries">
+            <h2>Past Journal Entries</h2>
+            <div *ngIf="isLoadingEntries" class="loading-entries">
+                Loading your past entries...
+            </div>
+            <div *ngIf="!isLoadingEntries && pastEntries.length === 0" class="no-entries">
+                No entries yet. Start by adding your first journal entry above.
+            </div>
+            <div *ngFor="let entry of pastEntries" class="entry">
+                <div class="details">
+                    <div class="emoji">{{ getMoodEmoji(entry.mood) }}</div>
+                    <div>
+                        <div class="date">{{ formatDate(entry.date) }}</div>
+                        <div class="preview">{{ entry.description || 'No description' }}</div>
+                    </div>
+                </div>
+                <div class="tags" *ngIf="entry.tags">
+                    <span *ngFor="let tag of entry.tags.split(',')">{{ tag.trim() }}</span>
+                </div>
+                <button class="delete-button" (click)="deleteEntry(entry.id)" [disabled]="loading">
+                    <span *ngIf="!loading">Delete</span>
+                    <span *ngIf="loading">Deleting...</span>
+                </button>
+            </div>
         </div>
-        <ng-template #noPieData>
-            <p class="no-data">Not enough data to display mood distribution yet.</p>
-        </ng-template>
+
+        <div class="card-grid">
+            <div class="card">
+                <h2>Mood Distribution</h2>
+                <div *ngIf="pastEntries.length > 0; else noPieData">
+                    <canvas baseChart
+                        [type]="'pie'"
+                        [data]="pieChartData"
+                        [options]="pieChartOptions">
+                    </canvas>
+                </div>
+                <ng-template #noPieData>
+                    <p class="no-data">Not enough data to display mood distribution yet.</p>
+                </ng-template>
+            </div>
+
+            <!-- Tag Correlations -->
+            <div class="card" *ngIf="pastEntries.length > 0 && getMoodTagCorrelations().length > 0">
+                <h2>Tag Mood Correlations</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tag</th>
+                                <th>Average Mood</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let correlation of getMoodTagCorrelations()">
+                                <td>{{ correlation.tag }}</td>
+                                <td>
+                                    {{ correlation.averageMood | number:'1.1-1' }} 
+                                    ({{ getMoodLabel(correlation.averageMood) }})
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Tag Correlations -->
-    <div class="card" *ngIf="pastEntries.length > 0 && getMoodTagCorrelations().length > 0">
-        <h2>Tag Mood Correlations</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tag</th>
-                    <th>Average Mood</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let correlation of getMoodTagCorrelations()">
-                    <td>{{ correlation.tag }}</td>
-                    <td>
-                        {{ correlation.averageMood | number:'1.1-1' }} 
-                        ({{ getMoodLabel(correlation.averageMood) }})
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Scientific Backing -->
-   
+    
+    <div class="fab" (click)="scrollToJournal()">+</div>
 </div>
-
-<!-- Floating Action Button for Quick Entry -->
-<div class="fab">+</div>

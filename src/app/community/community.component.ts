@@ -1,5 +1,5 @@
-import { HttpClientModule } from '@angular/common/http'; 
-import { Component, OnInit } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicesService } from '../services/consume.service';
@@ -26,6 +26,8 @@ interface NewPostRequest {
   styleUrls: ['./community.component.css']
 })
 export class CommunityComponent implements OnInit {
+  @ViewChild('postTextarea') postTextarea!: ElementRef<HTMLTextAreaElement>;
+
   posts: CommunityPost[] = [];
   newPostText: string = '';
   isLoading: boolean = false;
@@ -43,7 +45,6 @@ export class CommunityComponent implements OnInit {
   }
 
   loadCommunityPosts(): void {
-    
     const token = this.sessionService.gettoken();
 
     if (!token) {
@@ -69,6 +70,21 @@ export class CommunityComponent implements OnInit {
         }
       });
   }
+
+  focusTextarea(): void {
+    if (this.postTextarea) {
+      this.postTextarea.nativeElement.focus();
+
+      // Smooth scroll to textarea (optional)
+      setTimeout(() => {
+        this.postTextarea.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+    }
+  }
+
   submitPost(): void {
     const token = this.sessionService.gettoken();
     if (!this.newPostText.trim()) {
@@ -89,22 +105,23 @@ export class CommunityComponent implements OnInit {
     };
 
     this.isSubmitting = true;
-    this.servicesService.postRequest(`/api/forum/new-chat/${userId}`,postData,token)
-    .pipe(
-      finalize(() => this.isSubmitting = false)
-    ).subscribe({
-      next: (newPost: CommunityPost) => {
-        this.posts.unshift(newPost);
-        this.newPostText = '';
-        this.successMessage = 'Your post has been shared with the community!';
-        setTimeout(() => this.successMessage = null, 5000);
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error?.message || 'Failed to submit your post. Please try again.';
-        console.error('Error submitting post:', error);
-        setTimeout(() => this.errorMessage = null, 5000);
-      }
-    });
+    this.servicesService.postRequest(`/api/forum/new-chat/${userId}`, postData, token)
+      .pipe(
+        finalize(() => this.isSubmitting = false)
+      )
+      .subscribe({
+        next: (newPost: CommunityPost) => {
+          this.posts.unshift(newPost);
+          this.newPostText = '';
+          this.successMessage = 'Your post has been shared with the community!';
+          setTimeout(() => this.successMessage = null, 5000);
+        },
+        error: (error: any) => {
+          this.errorMessage = error.error?.message || 'Failed to submit your post. Please try again.';
+          console.error('Error submitting post:', error);
+          setTimeout(() => this.errorMessage = null, 5000);
+        }
+      });
   }
 
   formatDate(dateString: string): string {
@@ -116,5 +133,12 @@ export class CommunityComponent implements OnInit {
       minute: '2-digit'
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+  // Optional: Auto-resize textarea as user types
+  autoResize(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 }

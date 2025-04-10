@@ -16,6 +16,8 @@ import { error } from 'console';
   styleUrl: './contact.component.css'
 })
 export class ContactComponent implements OnInit {
+  isMenuOpen = false; 
+
   contactForm: FormGroup;
 
   email: string ='';
@@ -29,7 +31,8 @@ export class ContactComponent implements OnInit {
     private serviceService: ServicesService,
     private snackBar: MatSnackBar,
     private fb: FormBuilder
-  ){
+  )
+  {
     this.contactForm= this.fb.group({
     name: ['', Validators.required],
     phoneNumber: [''],
@@ -46,6 +49,9 @@ export class ContactComponent implements OnInit {
 
   showSnackbar(message:string, duration: number = 3000): void{
     this.snackBar.open(message, 'Close', {duration});
+  }
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   onSubmit(): void {

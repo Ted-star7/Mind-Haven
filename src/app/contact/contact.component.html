@@ -1,18 +1,26 @@
 <div class="body">
-  <!-- Navbar -->
-  <div class="navbar">
+<!-- Navbar with Hamburger -->
+  <nav class="navbar">
     <div class="logo">
       <i class="fas fa-peace"></i>
       <span>MindHaven</span>
     </div>
-    <div class="menu">
-      <a href="/" class="active">Home</a>
+    
+    <button class="hamburger" (click)="toggleMenu()" aria-label="Menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+    
+    <div class="menu" [class.active]="isMenuOpen">
+      <a href="/">Home</a>
       <a href="/therapy-centre">Therapy Centres</a>
       <a href="/therapy">Therapy</a>
       <a href="/signup">Log in</a>
-      <a href="/contact">Contact Us</a>
+      <a href="/contact"class="active">Contact Us</a>
     </div>
-  </div>
+  </nav>
+  
 
   <div class="container">
     <div class="left">

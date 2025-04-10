@@ -29,7 +29,8 @@ export class TherapyCentreComponent implements OnInit, AfterViewInit, OnDestroy 
   locationQuery: string = '';
   readonly defaultLocation = { lat: -1.2921, lng: 36.8219 };
   radius: number = 5000;
-
+  
+  isMenuOpen = false; 
   loading: boolean = false;
   error: string | null = null;
   showDirections: boolean = false;
@@ -53,6 +54,11 @@ export class TherapyCentreComponent implements OnInit, AfterViewInit, OnDestroy 
       this.map.remove();
     }
   }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
 
   private withMap(callback: (map: mapboxgl.Map) => void): void {
     if (this.mapInitialized && this.map) {
